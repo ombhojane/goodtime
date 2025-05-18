@@ -31,8 +31,9 @@ export default function ExportButton({ trip }: ExportButtonProps) {
       icon="download"
       onClick={handleExport}
       disabled={isExporting}
+      title="Export the entire trip as a single image"
     >
-      {isExporting ? 'Exporting...' : 'Save Moodboard'}
+      {isExporting ? 'Creating Image...' : 'Save Moodboard'}
     </Button>
   );
 } 

@@ -15,6 +15,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
+  title?: string;
 }
 
 export default function Button({
@@ -27,6 +28,7 @@ export default function Button({
   className = '',
   disabled = false,
   type = 'button',
+  title,
 }: ButtonProps) {
   const { theme, isDark } = useTheme();
   
@@ -75,6 +77,7 @@ export default function Button({
       onClick={onClick}
       className={combinedClass}
       disabled={disabled}
+      title={title}
     >
       {icon && iconPosition === 'left' && <Icon name={icon} size={size === 'lg' ? 20 : 16} className="mr-2" />}
       {children}
