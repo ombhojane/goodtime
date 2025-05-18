@@ -280,7 +280,30 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
   return (
     <div className="w-full">
       {/* Timeline controls */}
-      <div className="flex items-center justify-between mb-4 px-4">
+      <div className="flex items-center justify-between mb-6 px-4 md:px-8">
+        {isEditable && (
+          <div>
+            <Button
+              variant={isAddingStickerMode ? 'primary' : 'outline'}
+              size="md"
+              icon="sticker"
+              onClick={() => setIsAddingStickerMode(!isAddingStickerMode)}
+              className={`shadow-sm hover:shadow font-medium px-6 ${!isAddingStickerMode ? 'animate-pulse-soft' : ''}`}
+            >
+              Add Sticker
+            </Button>
+            <style jsx global>{`
+              @keyframes pulse-soft {
+                0%, 100% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.95; transform: scale(1.03); }
+              }
+              .animate-pulse-soft {
+                animation: pulse-soft 4s infinite ease-in-out;
+              }
+            `}</style>
+          </div>
+        )}
+        
         <div className="flex gap-2">
           <Button
             variant="outline"
@@ -300,24 +323,11 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
             Next
           </Button>
         </div>
-        
-        {isEditable && (
-          <div className="flex gap-2">
-            <Button
-              variant={isAddingStickerMode ? 'accent' : 'outline'}
-              size="sm"
-              icon="sticker"
-              onClick={() => setIsAddingStickerMode(!isAddingStickerMode)}
-            >
-              Add Sticker
-            </Button>
-          </div>
-        )}
       </div>
 
       {/* Sticker selector */}
       {isAddingStickerMode && isEditable && (
-        <div className="bg-muted rounded-lg p-4 mb-4 mx-4 animate-fade-in">
+        <div className="bg-muted rounded-lg p-4 mb-6 mx-4 md:mx-8 animate-fade-in">
           <div className="mb-4">
             <h3 className="text-sm font-medium mb-2">Select sticker type:</h3>
             <div className="flex gap-2">
@@ -422,27 +432,43 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
       )}
       
       {/* Timeline scroll container */}
-      <div 
-        ref={timelineRef}
-        className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory ${isDraggingMedia ? 'bg-muted/30' : ''}`}
-      >
-        {trip.days.map((day, index) => (
-          <TimelineSection
-            key={day.date}
-            date={day.date}
-            dayIndex={index}
-            mediaItems={day.items}
-            stickers={day.stickers}
-            onMediaClick={handleMediaClick}
-            onStickerMove={(id, position) => handleStickerMove(index, id, position)}
-            onStickerDelete={(id) => handleStickerDelete(index, id)}
-            isEditable={isEditable}
-            isAddingStickerMode={isAddingStickerMode && !!stickerContent}
-            onSectionClick={() => handleAddSticker(index, stickerType, stickerContent)}
-            onMediaDragStart={handleMediaDragStart}
-            onMediaDrop={handleMediaDrop}
-          />
-        ))}
+      <div className="relative">
+        <div 
+          ref={timelineRef}
+          className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory ${isDraggingMedia ? 'bg-muted/30' : ''}`}
+          style={{ 
+            scrollbarWidth: 'none', 
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {trip.days.map((day, index) => (
+            <TimelineSection
+              key={day.date}
+              date={day.date}
+              dayIndex={index}
+              mediaItems={day.items}
+              stickers={day.stickers}
+              onMediaClick={handleMediaClick}
+              onStickerMove={(id, position) => handleStickerMove(index, id, position)}
+              onStickerDelete={(id) => handleStickerDelete(index, id)}
+              isEditable={isEditable}
+              isAddingStickerMode={isAddingStickerMode && !!stickerContent}
+              onSectionClick={() => handleAddSticker(index, stickerType, stickerContent)}
+              onMediaDragStart={handleMediaDragStart}
+              onMediaDrop={handleMediaDrop}
+            />
+          ))}
+        </div>
+        
+        {/* Scroll indicators */}
+        {trip.days.length > 1 && (
+          <>
+            <div className="hidden md:block absolute top-0 bottom-0 right-0 w-24 pointer-events-none bg-gradient-to-l from-background to-transparent" />
+            <div className="hidden md:block absolute top-1/2 right-4 transform -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 shadow-md text-muted-foreground animate-pulse">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+          </>
+        )}
       </div>
       
       {/* Add sticker overlay */}

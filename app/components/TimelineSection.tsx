@@ -73,14 +73,26 @@ export default function TimelineSection({
   
   return (
     <div 
-      className={`timeline-section min-w-[95vw] md:min-w-[85vw] lg:min-w-[70vw] snap-start p-6 ${
+      className={`timeline-section min-w-[98vw] md:min-w-[94vw] lg:min-w-[90vw] xl:min-w-[86vw] snap-start p-4 md:p-6 lg:p-8 transition-colors duration-300 ${
         isAddingStickerMode ? 'sticker-add-mode hover:bg-muted/50' : ''
       }`}
       onClick={handleSectionClick}
     >
-      <h2 className="text-xl md:text-2xl font-bold mb-4">{formatDate(date)} <span className="text-sm font-normal text-muted-foreground">Day {dayIndex + 1}</span></h2>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="bg-primary/20 rounded-full h-12 w-12 flex items-center justify-center shrink-0">
+          <span className="font-bold text-primary">{dayIndex + 1}</span>
+        </div>
+        <div>
+          <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+            {formatDate(date)}
+            <div className={`ml-3 px-3 py-1 text-xs font-medium rounded-full bg-muted`}>
+              Day {dayIndex + 1}
+            </div>
+          </h2>
+        </div>
+      </div>
       
-      <div ref={containerRef} className="relative min-h-[400px]">
+      <div ref={containerRef} className="relative min-h-[400px] transform transition-all">
         {/* Stickers */}
         {stickers.map((sticker) => (
           <Sticker
@@ -101,24 +113,27 @@ export default function TimelineSection({
           return (
             <div 
               key={tod} 
-              className="mb-8 last:mb-0"
+              className="mb-8 last:mb-0 animate-fade-in"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, tod)}
             >
-              <div className={`rounded-lg p-4 mb-3 flex items-center ${getTimeOfDayColor(tod)}`}>
-                <span className="mr-2">{getTimeOfDayIcon(tod)}</span>
+              <div className={`rounded-lg p-4 mb-4 flex items-center ${getTimeOfDayColor(tod)}`}>
+                <span className="mr-3">{getTimeOfDayIcon(tod)}</span>
                 <h3 className="capitalize font-medium">{tod}</h3>
               </div>
               
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                {items.map((item) => (
-                  <MediaItem
-                    key={item.id}
-                    item={item}
-                    onClick={onMediaClick}
-                    draggable={isEditable && !isAddingStickerMode}
-                    onDragStart={(e, item) => handleMediaDragStart(e, item, tod)}
-                  />
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                {items.map((item, index) => (
+                  <div key={item.id} className="transform transition-all duration-500" style={{ 
+                    transitionDelay: `${index * 50}ms`,
+                  }}>
+                    <MediaItem
+                      item={item}
+                      onClick={onMediaClick}
+                      draggable={isEditable && !isAddingStickerMode}
+                      onDragStart={(e, item) => handleMediaDragStart(e, item, tod)}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -128,21 +143,39 @@ export default function TimelineSection({
         {/* Empty state */}
         {mediaItems.length === 0 && (
           <div 
-            className="flex flex-col items-center justify-center h-[300px] text-gray-400"
+            className="flex flex-col items-center justify-center h-[300px] text-muted-foreground border border-dashed border-border rounded-xl bg-muted/5"
             onDragOver={handleDragOver}
             onDrop={(e) => handleDrop(e, 'afternoon')}
           >
-            <span className="text-6xl mb-4">📷</span>
-            <p className="text-lg">No photos for this day</p>
-            <p className="text-sm">Add some memories to get started!</p>
+            <div className="bg-muted/20 rounded-full h-20 w-20 flex items-center justify-center mb-4">
+              <span className="text-5xl">📷</span>
+            </div>
+            <p className="text-xl font-medium mb-2">Awaiting Your Memories</p>
+            <p className="text-sm text-muted-foreground">Capture this day's special moments with photos</p>
+            {isEditable && (
+              <div className="mt-4">
+                <button className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                  Upload Photos
+                </button>
+              </div>
+            )}
           </div>
         )}
 
         {/* Visual indicator for adding sticker mode */}
         {isAddingStickerMode && (
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-transparent pointer-events-none border-2 border-dashed border-blue-500/50 rounded-lg flex items-center justify-center">
-            <div className="bg-card/90 backdrop-blur-sm p-3 rounded-lg shadow-soft animate-pulse">
-              <p className="text-center font-medium">Click here to add sticker</p>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none border-2 border-dashed border-primary/50 rounded-lg flex items-center justify-center">
+            <div className="bg-card/90 backdrop-blur-sm px-4 py-3 rounded-lg shadow-lg animate-pulse">
+              <p className="text-center font-medium flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+                <span>Click to Add Sticker Here</span>
+              </p>
             </div>
           </div>
         )}

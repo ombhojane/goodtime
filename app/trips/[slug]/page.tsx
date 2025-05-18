@@ -150,10 +150,13 @@ export default function TripPage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Navigation Bar */}
-      <div className="bg-card border-b border-border">
+      <div className="bg-card border-b border-border backdrop-blur-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
-          <Link href="/trips" className="text-muted-foreground hover:text-foreground font-medium">
-            ← Back to Trips
+          <Link href="/trips" className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-medium transition-colors group">
+            <span className="bg-muted/50 p-1.5 rounded-full group-hover:bg-primary/10">
+              <Icon name="arrowLeft" size={16} />
+            </span>
+            <span>Back to Journey Collection</span>
           </Link>
           
           <div className="flex items-center gap-2">
@@ -161,10 +164,11 @@ export default function TripPage() {
               variant="ghost"
               size="sm"
               onClick={handleDeleteTrip}
-              title="Delete this trip"
+              title="Delete this journey"
               icon="trash"
+              className="text-muted-foreground hover:text-red-500"
             >
-              Delete Trip
+              Delete Journey
             </Button>
           </div>
         </div>
@@ -173,7 +177,7 @@ export default function TripPage() {
       {/* Enhanced Trip Header */}
       <div className="relative">
         {coverImage ? (
-          <div className="relative h-48 md:h-64 w-full overflow-hidden">
+          <div className="relative h-56 md:h-72 lg:h-80 w-full overflow-hidden">
             <Image
               src={coverImage}
               alt={trip.title}
@@ -181,47 +185,83 @@ export default function TripPage() {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20" />
-            <div className="absolute inset-0 flex flex-col justify-center max-w-7xl mx-auto px-4 text-white">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Icon name="location" size={18} />
-                  <span>{trip.days.length} days</span>
-                </div>
-                <span>•</span>
-                <div>
-                  {new Date(trip.startDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric' 
-                  })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/30" />
+            <div className="absolute inset-0 flex flex-col justify-end max-w-7xl mx-auto px-4 py-8">
+              <div className="text-white space-y-3 max-w-3xl">
+                {trip.location && (
+                  <div className="flex items-center gap-2 text-sm font-medium bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full w-fit">
+                    <Icon name="location" size={16} />
+                    <span>{trip.location}</span>
+                  </div>
+                )}
+                <h1 className="text-3xl md:text-5xl font-bold drop-shadow-sm">{trip.title}</h1>
+                {trip.description && (
+                  <p className="text-white/90 md:text-lg max-w-2xl">
+                    {trip.description}
+                  </p>
+                )}
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 text-sm md:text-base">
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Icon name="calendar" size={16} />
+                    <span>
+                      {new Date(trip.startDate).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Icon name="calendar" size={16} />
+                    <span>{trip.days.length} {trip.days.length === 1 ? 'day' : 'days'}</span>
+                  </div>
+                  {trip.theme && (
+                    <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                      <span className={`w-3 h-3 rounded-full bg-${trip.theme}-500`}></span>
+                      <span>{trip.theme.charAt(0).toUpperCase() + trip.theme.slice(1)} theme</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         ) : (
-          <div className="bg-gradient-to-r from-teal-500 to-sky-500">
-            <div className="max-w-7xl mx-auto px-4 py-12 text-white">
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Icon name="location" size={18} />
-                  <span>{trip.days.length} days</span>
-                </div>
-                <span>•</span>
-                <div>
-                  {new Date(trip.startDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric' 
-                  })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric',
-                    year: 'numeric'
-                  })}
+          <div className={`bg-gradient-to-r from-${trip.theme || 'teal'}-500 to-${trip.theme || 'sky'}-600`}>
+            <div className="max-w-7xl mx-auto px-4 py-16 text-white">
+              <div className="space-y-3 max-w-3xl">
+                {trip.location && (
+                  <div className="flex items-center gap-2 text-sm font-medium bg-white/20 backdrop-blur-sm px-3 py-1.5 rounded-full w-fit">
+                    <Icon name="location" size={16} />
+                    <span>{trip.location}</span>
+                  </div>
+                )}
+                <h1 className="text-3xl md:text-5xl font-bold">{trip.title}</h1>
+                {trip.description && (
+                  <p className="text-white/90 md:text-lg max-w-2xl">
+                    {trip.description}
+                  </p>
+                )}
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-1 text-sm md:text-base">
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Icon name="calendar" size={16} />
+                    <span>
+                      {new Date(trip.startDate).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric' 
+                      })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Icon name="calendar" size={16} />
+                    <span>{trip.days.length} {trip.days.length === 1 ? 'day' : 'days'}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -230,62 +270,86 @@ export default function TripPage() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1">
+      <main className="flex-1 w-full overflow-hidden">
         {/* Controls */}
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <h2 className="text-lg font-medium">Trip Timeline</h2>
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="border-b border-border pb-4 mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-bold flex items-center gap-2">
+                <Icon name="map" size={24} className="text-primary" />
+                <span>Travel Story</span>
+              </h2>
+              <p className="text-muted-foreground">Your adventure unfolds day by day</p>
+            </div>
 
-          <div className="flex gap-2">
-            <ExportButton trip={trip} />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setIsUploaderVisible(!isUploaderVisible)}
-              icon="upload"
-            >
-              Upload Photos
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => setIsUploaderVisible(!isUploaderVisible)}
+                icon="camera"
+                className="border-primary/30 hover:border-primary hover:bg-primary/5"
+              >
+                Add Photos
+              </Button>
+              <ExportButton trip={trip} />
+            </div>
           </div>
         </div>
 
         {/* Media Uploader */}
         {isUploaderVisible && (
           <div className="fixed inset-0 bg-background/90 dark:bg-black/80 backdrop-blur-sm z-50 overflow-y-auto">
-            <div className="max-w-4xl mx-auto p-6 bg-background border border-border rounded-lg shadow-lg my-8">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-medium">Upload Photos</h3>
+            <div className="max-w-4xl mx-auto p-6 bg-background border border-border rounded-xl shadow-lg my-8 animate-fade-in">
+              <div className="flex justify-between items-center mb-6 pb-4 border-b border-border">
+                <h3 className="text-2xl font-bold flex items-center gap-2">
+                  <Icon name="camera" size={24} className="text-primary" />
+                  <span>Capture Your Memories</span>
+                </h3>
                 <button 
-                  className="text-muted-foreground hover:text-foreground p-1 rounded-full hover:bg-muted"
+                  className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted transition-colors"
                   onClick={() => setIsUploaderVisible(false)}
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
+                  <Icon name="x" size={20} />
                 </button>
               </div>
+              <p className="text-muted-foreground mb-6">Add photos to your journey timeline. They'll be organized by date automatically.</p>
               <MediaUploader onUpload={handleUpload} days={trip.days} />
             </div>
           </div>
         )}
 
         {/* Timeline */}
-        <div className="mt-4">
+        <div className="w-full overflow-x-hidden pb-12">
           <Timeline trip={trip} onUpdate={handleTripUpdate} />
         </div>
       </main>
 
       {/* Footer */}
       <footer className="bg-card shadow-inner mt-auto border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center text-sm text-muted-foreground">
-          <div>Trip Moodboard Builder</div>
-          <div className="flex items-center gap-4">
-            <Link href="/trips/create" className="text-primary hover:underline">
-              Create New Trip
+        <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between items-center text-sm text-muted-foreground gap-4">
+          <div className="flex items-center gap-2">
+            <Icon name="compass" size={18} className="text-primary" />
+            <span className="font-medium text-foreground">Trip Memory Canvas</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-4">
+            <Link href="/trips/create" className="text-primary hover:underline flex items-center gap-1.5">
+              <Icon name="add" size={16} />
+              <span>New Journey</span>
             </Link>
-            <Link href="/trips" className="text-primary hover:underline">
-              All Trips
+            <Link href="/trips" className="text-primary hover:underline flex items-center gap-1.5">
+              <Icon name="map" size={16} />
+              <span>All Journeys</span>
             </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              icon="arrowUp"
+              className="ml-2"
+            >
+              Back to Top
+            </Button>
           </div>
         </div>
       </footer>
