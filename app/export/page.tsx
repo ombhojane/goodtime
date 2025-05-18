@@ -150,10 +150,7 @@ export default function ExportPage() {
           </p>
         </div>
         <div className="absolute top-4 left-4 z-30">
-          <Link 
-            href={`/trips/${trip.slug}`}
-            className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm"
-          >
+                    <Link    href="/trips"            className="flex items-center gap-2 text-white/90 hover:text-white transition-colors px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-sm"          >
             <Icon name="arrowLeft" size={16} />
             <span>Back to Trip</span>
           </Link>
