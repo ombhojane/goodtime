@@ -29,12 +29,24 @@ export default function MediaUploader({ onUpload, days = [] }: MediaUploaderProp
   const [selectedDayIndex, setSelectedDayIndex] = useState<number | null>(null);
   
   // Handle file drop/selection
-  const onDrop = (acceptedFiles: File[]) => {
+  const onDrop = async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
     
-    // Create previews for each file
-    const newPreviews: UploadPreview[] = acceptedFiles.map(file => {
-      const url = URL.createObjectURL(file);
+    // Convert files to base64 and create previews
+    const newPreviews: UploadPreview[] = [];
+    
+    for (const file of acceptedFiles) {
+      // Convert file to base64
+      const base64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target?.result) {
+            resolve(e.target.result as string);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+      
       const now = new Date();
       
       // Format date as YYYY-MM-DD
@@ -47,15 +59,15 @@ export default function MediaUploader({ onUpload, days = [] }: MediaUploaderProp
       const hours = String(now.getHours()).padStart(2, '0');
       const minutes = String(now.getMinutes()).padStart(2, '0');
       
-      return {
+      newPreviews.push({
         id: generateId(),
         file,
-        url,
+        url: base64,  // Store base64 data URL instead of object URL
         caption: '',
         location: '',
         timestamp: `${formattedDate}T${hours}:${minutes}:00`
-      };
-    });
+      });
+    }
     
     setUploadedFiles(prev => [...prev, ...newPreviews]);
     
@@ -93,8 +105,7 @@ export default function MediaUploader({ onUpload, days = [] }: MediaUploaderProp
   const handleRemoveFile = (index: number) => {
     const newUploadedFiles = [...uploadedFiles];
     
-    // Revoke the object URL to avoid memory leaks
-    URL.revokeObjectURL(newUploadedFiles[index].url);
+    // No need to revoke URLs for base64 strings
     
     newUploadedFiles.splice(index, 1);
     setUploadedFiles(newUploadedFiles);
