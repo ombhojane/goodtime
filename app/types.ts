@@ -41,6 +41,9 @@ export interface Trip {
   endDate: string;
   days: TimelineDay[];
   theme?: string;
+  location?: string;
+  description?: string;
+  bannerImage?: string;
 }
 
 export const timeOfDay = (date: Date): TimeOfDay => {

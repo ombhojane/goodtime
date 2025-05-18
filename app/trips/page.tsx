@@ -24,18 +24,27 @@ interface TripItem {
         src?: string;
       }>;
     }>;
+    bannerImage?: string;
   };
 }
 
 // Helper function to find the first image in a trip
 const getFirstTripImage = (trip: TripItem): string | null => {
-  if (!trip?.trip?.days) return null;
+  if (!trip?.trip) return null;
   
-  for (const day of trip.trip.days) {
-    if (!day.items) continue;
-    
-    const image = day.items.find(item => item.type === 'image');
-    if (image && image.src) return image.src;
+  // First check if there's an explicitly set banner image
+  if (trip.trip.bannerImage) {
+    return trip.trip.bannerImage;
+  }
+  
+  // Fall back to finding the first image in trip days
+  if (trip.trip.days) {
+    for (const day of trip.trip.days) {
+      if (!day.items) continue;
+      
+      const image = day.items.find(item => item.type === 'image');
+      if (image && image.src) return image.src;
+    }
   }
   
   return null;
@@ -47,7 +56,16 @@ export default function TripsPage() {
   
   useEffect(() => {
     // Load trips on client-side only
-    setTrips(getTripsList() as TripItem[]);
+    const tripsList = getTripsList() as TripItem[];
+    setTrips(tripsList);
+    
+    // Debug trip information
+    console.log('Trips loaded:', tripsList.map(trip => ({
+      title: trip.title,
+      hasBanner: !!trip.trip.bannerImage,
+      bannerPreview: trip.trip.bannerImage?.substring(0, 30) + '...',
+      firstImage: getFirstTripImage(trip)
+    })));
   }, []);
   
   const handleCreateTrip = () => {

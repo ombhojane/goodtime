@@ -15,13 +15,21 @@ import Icon from '../../components/Icon';
 
 // Helper function to find the best cover image for a trip
 const getTripCoverImage = (trip: Trip | null): string | null => {
-  if (!trip?.days) return null;
+  if (!trip) return null;
   
-  for (const day of trip.days) {
-    if (!day.items) continue;
-    
-    const image = day.items.find(item => item.type === 'image');
-    if (image) return image.src;
+  // First check if there's an explicitly set banner image
+  if (trip.bannerImage) {
+    return trip.bannerImage;
+  }
+  
+  // Fall back to finding the first image in trip days
+  if (trip.days) {
+    for (const day of trip.days) {
+      if (!day.items) continue;
+      
+      const image = day.items.find(item => item.type === 'image');
+      if (image) return image.src;
+    }
   }
   
   return null;
@@ -41,6 +49,13 @@ export default function TripPage() {
       if (loadedTrip) {
         setTrip(loadedTrip);
         setCoverImage(getTripCoverImage(loadedTrip));
+        
+        // Debug the loaded trip to verify banner image
+        console.log('Loaded trip:', { 
+          title: loadedTrip.title,
+          hasBanner: !!loadedTrip.bannerImage,
+          bannerImage: loadedTrip.bannerImage?.substring(0, 50) + '...' // Preview first 50 chars
+        });
       } else {
         // If trip doesn't exist, redirect to trips page
         router.push('/trips');
