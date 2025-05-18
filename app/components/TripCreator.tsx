@@ -53,6 +53,12 @@ export default function TripCreator({ onTripCreated, onCancel }: TripCreatorProp
     
     onTripCreated(newTrip);
   };
+
+  const handleCancel = () => {
+    // Clear any localStorage data to prevent accidental redirects
+    localStorage.removeItem('currentTrip');
+    onCancel();
+  };
   
   return (
     <div className="glass-card rounded-lg shadow-soft dark:shadow-soft-dark p-6 max-w-md mx-auto animate-fade-in border border-border">
@@ -60,7 +66,7 @@ export default function TripCreator({ onTripCreated, onCancel }: TripCreatorProp
         <h2 className="text-xl font-semibold text-foreground">Create a New Trip</h2>
         <button
           className="text-muted-foreground hover:text-foreground transition-colors"
-          onClick={onCancel}
+          onClick={handleCancel}
           aria-label="Close"
         >
           <Icon name="x" size={20} />
@@ -143,7 +149,7 @@ export default function TripCreator({ onTripCreated, onCancel }: TripCreatorProp
           <Button
             variant="outline"
             type="button"
-            onClick={onCancel}
+            onClick={handleCancel}
           >
             Cancel
           </Button>
