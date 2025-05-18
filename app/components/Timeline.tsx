@@ -11,9 +11,10 @@ interface TimelineProps {
   trip: Trip;
   onUpdate?: (trip: Trip) => void;
   isEditable?: boolean;
+  isReadOnly?: boolean;
 }
 
-export default function Timeline({ trip, onUpdate, isEditable = true }: TimelineProps) {
+export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly = false }: TimelineProps) {
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [isAddingStickerMode, setIsAddingStickerMode] = useState(false);
   const [stickerType, setStickerType] = useState<'emoji' | 'text' | 'location' | 'category'>('emoji');
@@ -37,11 +38,12 @@ export default function Timeline({ trip, onUpdate, isEditable = true }: Timeline
   };
   
   const handleMediaClick = (item: MediaItem) => {
+    if (isReadOnly) return;
     setSelectedMedia(item);
   };
   
   const handleStickerMove = (dayIndex: number, stickerId: string, position: { x: number, y: number }) => {
-    if (!onUpdate) return;
+    if (!onUpdate || isReadOnly) return;
     
     const updatedTrip = { ...trip };
     const stickerIndex = updatedTrip.days[dayIndex].stickers.findIndex(s => s.id === stickerId);
@@ -57,7 +59,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true }: Timeline
   };
   
   const handleStickerDelete = (dayIndex: number, stickerId: string) => {
-    if (!onUpdate) return;
+    if (!onUpdate || isReadOnly) return;
     
     const updatedTrip = { ...trip };
     updatedTrip.days[dayIndex].stickers = updatedTrip.days[dayIndex].stickers.filter(s => s.id !== stickerId);
@@ -66,7 +68,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true }: Timeline
   };
   
   const handleAddSticker = (dayIndex: number, type: 'emoji' | 'text' | 'location' | 'category', content: string) => {
-    if (!onUpdate) return;
+    if (!onUpdate || isReadOnly) return;
     
     const newSticker: Sticker = {
       id: generateId(),
@@ -89,6 +91,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true }: Timeline
   
   // Handle drag-and-drop functionality
   const handleMediaDragStart = (e: React.DragEvent, item: MediaItem, dayIndex: number, timeOfDay: TimeOfDay) => {
+    if (isReadOnly) return;
     setIsDraggingMedia(true);
     setDraggedItem({
       item,
@@ -100,7 +103,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true }: Timeline
   const handleMediaDrop = (e: React.DragEvent, targetDayIndex: number, targetTimeOfDay: TimeOfDay) => {
     e.preventDefault();
     
-    if (!draggedItem || !onUpdate) return;
+    if (!draggedItem || !onUpdate || isReadOnly) return;
     
     const { item, sourceDayIndex } = draggedItem;
     const updatedTrip = { ...trip };

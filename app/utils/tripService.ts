@@ -1,7 +1,6 @@
 'use client';
 
 import { Trip } from '../types';
-import { generateId } from '../utils';
 
 // Slugify a title for URL purposes
 export function slugify(text: string): string {
@@ -50,6 +49,20 @@ export function getTripBySlug(slug: string): Trip | null {
   return trip ? trip.trip : null;
 }
 
+// Get a specific trip by ID
+export function getTripById(id: string): Trip | null {
+  // First check if it's a sample trip request
+  const sampleTripObj = getSampleTrip();
+  if (sampleTripObj.id === id) {
+    return sampleTripObj;
+  }
+  
+  // If not the sample trip, check localStorage
+  const trips = getTripsList();
+  const trip = trips.find(t => t.id === id);
+  return trip ? trip.trip : null;
+}
+
 // Save a trip
 export function saveTrip(trip: Trip): string {
   const trips = getTripsList();
@@ -92,5 +105,16 @@ export function deleteTrip(id: string): void {
 import { sampleTrip } from '../mockData'; // We'll create this next
 
 export function getSampleTrip(): Trip {
-  return { ...sampleTrip };
+  // Create a copy of the sample trip
+  const sampleTripCopy = { ...sampleTrip };
+  
+  // Check if we have a stored sample trip ID in sessionStorage
+  if (typeof window !== 'undefined') {
+    const storedSampleTripId = sessionStorage.getItem('sample_trip_id');
+    if (storedSampleTripId) {
+      sampleTripCopy.id = storedSampleTripId;
+    }
+  }
+  
+  return sampleTripCopy;
 } 

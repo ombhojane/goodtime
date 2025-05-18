@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/Header';
 import Timeline from '../../components/Timeline';
@@ -32,6 +32,13 @@ export default function SampleTripPage() {
   const [trip, setTrip] = useState(getSampleTrip());
   const [isUploaderVisible, setIsUploaderVisible] = useState(false);
   const coverImage = getTripCoverImage(trip) || '/images/tokyo-1.jpg';
+  
+  useEffect(() => {
+    // Store sample trip ID in sessionStorage to ensure consistency during the session
+    if (trip && trip.id) {
+      sessionStorage.setItem('sample_trip_id', trip.id);
+    }
+  }, [trip]);
   
   const handleTripUpdate = (updatedTrip) => {
     setTrip(updatedTrip);

@@ -1,39 +1,34 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Button from './Button';
 import { Trip } from '../types';
-import { exportTimelineAsImages } from '../utils/exportUtils';
 
 interface ExportButtonProps {
   trip: Trip;
 }
 
 export default function ExportButton({ trip }: ExportButtonProps) {
+  const router = useRouter();
   const [isExporting, setIsExporting] = useState(false);
   
-  const handleExport = async () => {
-    try {
-      setIsExporting(true);
-      await exportTimelineAsImages(trip);
-    } catch (error) {
-      console.error('Export failed:', error);
-      alert('Failed to export moodboard. Please try again.');
-    } finally {
-      setIsExporting(false);
-    }
+  const handleExport = () => {
+    setIsExporting(true);
+    // Navigate to export page with trip ID
+    router.push(`/export?tripId=${trip.id}`);
   };
   
   return (
     <Button
-      variant="outline"
+      variant="primary"
       size="sm"
       icon="download"
       onClick={handleExport}
       disabled={isExporting}
-      title="Export the entire trip as a single image"
+      title="Export your trip moodboard"
     >
-      {isExporting ? 'Creating Image...' : 'Save Moodboard'}
+      Export Moodboard
     </Button>
   );
 } 
