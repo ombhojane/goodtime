@@ -1,12 +1,14 @@
 'use client';
 
+import React from 'react';
+
 interface IconProps {
   name: string;
   size?: number;
   className?: string;
 }
 
-const iconPaths: Record<string, JSX.Element> = {
+const iconPaths: Record<string, React.ReactElement> = {
   timeline: (
     <path d="M3 3v18h18v-18h-18zm16 16h-14v-14h14v14zm-12-2h2v-10h-2v10zm4 0h2v-5h-2v5zm4 0h2v-7h-2v7z"></path>
   ),

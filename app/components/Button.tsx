@@ -1,13 +1,13 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, MouseEvent } from 'react';
 import Icon from './Icon';
 import { useTheme } from '../context/ThemeContext';
 import { themes } from '../themes';
 
 interface ButtonProps {
   children: ReactNode;
-  onClick?: () => void;
+  onClick?: ((e?: MouseEvent<Element>) => void) | (() => void);
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'accent';
   size?: 'sm' | 'md' | 'lg';
   icon?: string;
@@ -43,9 +43,7 @@ export default function Button({
   };
   
   // Dynamic theme-specific classes
-  const getVariantClasses = () => {
-    const themeColors = isDark ? 'dark' : 'light';
-    
+  const getVariantClasses = () => {    
     const variants = {
       primary: `${isDark ? themes[theme].dark.primary : themes[theme].light.primary} ${themes[theme].light.buttonText} hover:${isDark ? themes[theme].dark.primaryHover : themes[theme].light.primaryHover}`,
       secondary: `${isDark ? themes[theme].dark.secondary : themes[theme].light.secondary} ${themes[theme].light.buttonText} hover:opacity-90`,

@@ -9,7 +9,7 @@ interface StickerProps {
   onMove?: (id: string, position: { x: number; y: number }) => void;
   onDelete?: (id: string) => void;
   isEditable?: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export default function Sticker({ sticker, onMove, onDelete, isEditable = true, containerRef }: StickerProps) {
@@ -47,7 +47,6 @@ export default function Sticker({ sticker, onMove, onDelete, isEditable = true, 
     e.preventDefault();
     setIsDragging(true);
     
-    const containerRect = containerRef.current.getBoundingClientRect();
     const stickerRect = stickerRef.current.getBoundingClientRect();
     
     dragOffset.current = {

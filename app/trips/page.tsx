@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { getTripsList } from '../utils/tripService';
 import Button from '../components/Button';
@@ -131,7 +131,7 @@ export default function TripsPage() {
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={(e: React.MouseEvent) => {
+                                onClick={(e: MouseEvent<Element>) => {
                                   e.stopPropagation();
                                   handleSelectTrip(trip.slug);
                                 }}
@@ -161,7 +161,7 @@ export default function TripsPage() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={(e: React.MouseEvent) => {
+                              onClick={(e: MouseEvent<Element>) => {
                                 e.stopPropagation();
                                 handleSelectTrip(trip.slug);
                               }}
@@ -212,7 +212,7 @@ export default function TripsPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={(e: React.MouseEvent) => {
+                      onClick={(e: MouseEvent<Element>) => {
                         e.stopPropagation();
                         handleViewSampleTrip();
                       }}

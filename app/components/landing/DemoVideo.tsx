@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Button from '../Button';
 import Icon from '../Icon';
+import Image from 'next/image';
 
 export default function DemoVideo() {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,11 +28,16 @@ export default function DemoVideo() {
               <div className="relative w-full h-full">
                 {/* Video thumbnail image */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60 z-10" />
-                <img 
-                  src="/images/tokyo-1.jpg" 
-                  alt="Video thumbnail" 
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
+                <div className="absolute inset-0">
+                  <Image 
+                    src="/images/tokyo-1.jpg" 
+                    alt="Video thumbnail" 
+                    className="object-cover"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, 1024px"
+                  />
+                </div>
                 
                 {/* Play button overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-20">

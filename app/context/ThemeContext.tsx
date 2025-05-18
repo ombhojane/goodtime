@@ -35,7 +35,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
     // Apply theme to the document
     applyTheme(savedTheme || theme, savedMode === 'true' || prefersDark);
-  }, []);
+  }, [theme]);
 
   const toggleDarkMode = () => {
     const newMode = !isDark;
@@ -52,7 +52,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const applyTheme = (themeId: ThemeColor, dark: boolean) => {
     // Add theme classes to document element
-    const themeClasses = getThemeClasses(themeId, dark);
+    getThemeClasses(themeId, dark);
     
     // Set dark mode class
     if (dark) {

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Trip, formatDate } from '../types';
 import { useTheme } from '../context/ThemeContext';
-import { themes, ThemeColor } from '../themes';
+import { themes } from '../themes';
 import Icon from './Icon';
 
 interface HeaderProps {

@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import Icon from '../Icon';
+import Image from 'next/image';
 
 export default function CTA() {
   const router = useRouter();
@@ -32,11 +33,23 @@ export default function CTA() {
               
               {/* Images floating over the pattern */}
               <div className="absolute top-1/4 left-1/4 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-lg shadow-lg overflow-hidden border-4 border-white/20 rotate-6">
-                <img src="/images/kyoto-1.jpg" alt="Travel memory" className="w-full h-full object-cover" />
+                <Image 
+                  src="/images/kyoto-1.jpg" 
+                  alt="Travel memory" 
+                  className="object-cover"
+                  fill
+                  sizes="128px"
+                />
               </div>
               
               <div className="absolute top-2/3 left-3/4 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-lg shadow-lg overflow-hidden border-4 border-white/20 -rotate-12">
-                <img src="/images/osaka-1.jpg" alt="Travel memory" className="w-full h-full object-cover" />
+                <Image 
+                  src="/images/osaka-1.jpg" 
+                  alt="Travel memory" 
+                  className="object-cover"
+                  fill
+                  sizes="96px"
+                />
               </div>
             </div>
             
@@ -48,7 +61,7 @@ export default function CTA() {
                 </h2>
                 
                 <p className="text-lg text-muted-foreground mb-8 max-w-md">
-                  Bring your travel memories to life with our beautiful timeline maker. It's free to get started!
+                  Bring your travel memories to life with our beautiful timeline maker. It&apos;s free to get started!
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
