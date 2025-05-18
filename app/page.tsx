@@ -7,6 +7,7 @@ import Timeline from './components/Timeline';
 import MediaUploader from './components/MediaUploader';
 import TripCreator from './components/TripCreator';
 import Button from './components/Button';
+import ExportButton from './components/ExportButton';
 import { Trip, MediaItem, formatDate } from './types';
 import { generateId } from './utils';
 
@@ -241,6 +242,7 @@ export default function Home() {
           <h2 className="text-lg font-medium">Trip Timeline</h2>
 
           <div className="flex gap-2">
+            <ExportButton trip={trip!} />
             <Button
               variant="outline"
               size="sm"
