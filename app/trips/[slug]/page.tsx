@@ -10,6 +10,22 @@ import ExportButton from '../../components/ExportButton';
 import Link from 'next/link';
 import { MediaItem, Trip } from '../../types';
 import { getTripBySlug, saveTrip, deleteTrip } from '../../utils/tripService';
+import Image from 'next/image';
+import Icon from '../../components/Icon';
+
+// Helper function to find the best cover image for a trip
+const getTripCoverImage = (trip: Trip | null): string | null => {
+  if (!trip?.days) return null;
+  
+  for (const day of trip.days) {
+    if (!day.items) continue;
+    
+    const image = day.items.find(item => item.type === 'image');
+    if (image) return image.src;
+  }
+  
+  return null;
+};
 
 export default function TripPage() {
   const router = useRouter();
@@ -17,12 +33,14 @@ export default function TripPage() {
   const [trip, setTrip] = useState<Trip | null>(null);
   const [isUploaderVisible, setIsUploaderVisible] = useState(false);
   const slug = params?.slug as string;
+  const [coverImage, setCoverImage] = useState<string | null>(null);
 
   useEffect(() => {
     if (slug) {
       const loadedTrip = getTripBySlug(slug);
       if (loadedTrip) {
         setTrip(loadedTrip);
+        setCoverImage(getTripCoverImage(loadedTrip));
       } else {
         // If trip doesn't exist, redirect to trips page
         router.push('/trips');
@@ -137,8 +155,64 @@ export default function TripPage() {
         </div>
       </div>
       
-      {/* Trip Header */}
-      <Header trip={trip} />
+      {/* Enhanced Trip Header */}
+      <div className="relative">
+        {coverImage ? (
+          <div className="relative h-48 md:h-64 w-full overflow-hidden">
+            <Image
+              src={coverImage}
+              alt={trip.title}
+              fill
+              className="object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20" />
+            <div className="absolute inset-0 flex flex-col justify-center max-w-7xl mx-auto px-4 text-white">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Icon name="location" size={18} />
+                  <span>{trip.days.length} days</span>
+                </div>
+                <span>•</span>
+                <div>
+                  {new Date(trip.startDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-gradient-to-r from-teal-500 to-sky-500">
+            <div className="max-w-7xl mx-auto px-4 py-12 text-white">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Icon name="location" size={18} />
+                  <span>{trip.days.length} days</span>
+                </div>
+                <span>•</span>
+                <div>
+                  {new Date(trip.startDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                  })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric',
+                    year: 'numeric'
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Main Content */}
       <main className="flex-1">

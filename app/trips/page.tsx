@@ -6,6 +6,21 @@ import { getTripsList } from '../utils/tripService';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import { formatDate } from '../types';
+import Image from 'next/image';
+
+// Helper function to find the first image in a trip
+const getFirstTripImage = (trip: any): string | null => {
+  if (!trip?.trip?.days) return null;
+  
+  for (const day of trip.trip.days) {
+    if (!day.items) continue;
+    
+    const image = day.items.find((item: any) => item.type === 'image');
+    if (image) return image.src;
+  }
+  
+  return null;
+};
 
 export default function TripsPage() {
   const [trips, setTrips] = useState<any[]>([]);
@@ -79,62 +94,133 @@ export default function TripsPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {trips.map(trip => (
-                  <div 
-                    key={trip.id} 
-                    className="border border-border rounded-lg overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-200 cursor-pointer bg-card"
-                    onClick={() => handleSelectTrip(trip.slug)}
-                  >
-                    <div className="p-4">
-                      <div className="font-medium text-lg mb-1">{trip.title}</div>
-                      <div className="text-muted-foreground text-sm mb-3">
-                        {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">
-                          Updated {new Date(trip.updatedAt).toLocaleDateString()}
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSelectTrip(trip.slug);
-                          }}
-                        >
-                          Open
-                        </Button>
-                      </div>
+                {trips.map(trip => {
+                  const tripImage = getFirstTripImage(trip);
+                  
+                  return (
+                    <div 
+                      key={trip.id} 
+                      className="border border-border rounded-lg overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-200 cursor-pointer bg-card relative h-56"
+                      onClick={() => handleSelectTrip(trip.slug)}
+                    >
+                      {tripImage ? (
+                        <>
+                          <div className="absolute inset-0 z-0">
+                            <div className="relative w-full h-full">
+                              <Image 
+                                src={tripImage} 
+                                alt={trip.title}
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+                            </div>
+                          </div>
+                          <div className="absolute inset-0 z-10 p-4 flex flex-col justify-between">
+                            <div>
+                              <div className="font-medium text-lg mb-1 text-white">{trip.title}</div>
+                              <div className="text-white/80 text-sm mb-1">
+                                {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-white/70 bg-black/30 py-1 px-2 rounded-full">
+                                Updated {new Date(trip.updatedAt).toLocaleDateString()}
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={(e: React.MouseEvent) => {
+                                  e.stopPropagation();
+                                  handleSelectTrip(trip.slug);
+                                }}
+                                className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border-white/20"
+                              >
+                                Open Trip
+                              </Button>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="p-4 h-full flex flex-col justify-between">
+                          <div>
+                            <div className="font-medium text-xl mb-2">{trip.title}</div>
+                            <div className="text-muted-foreground text-sm mb-3">
+                              {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
+                            </div>
+                            <div className="flex items-center gap-2 text-muted-foreground mt-2">
+                              <Icon name="image" size={16} />
+                              <span className="text-xs">No photos yet</span>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-muted-foreground">
+                              Updated {new Date(trip.updatedAt).toLocaleDateString()}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e: React.MouseEvent) => {
+                                e.stopPropagation();
+                                handleSelectTrip(trip.slug);
+                              }}
+                            >
+                              Open
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
 
           <div>
             <h2 className="text-xl font-medium mb-4">Sample Trip</h2>
-            <div className="border border-border rounded-lg overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-200 cursor-pointer bg-card"
-              onClick={handleViewSampleTrip}>
-              <div className="p-4">
-                <div className="font-medium text-lg mb-1">Summer in Japan</div>
-                <div className="text-muted-foreground text-sm mb-3">
-                  Jul 10, 2023 - Jul 20, 2023
+            <div className="md:max-w-md">
+              <div 
+                className="border border-border rounded-lg overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-200 cursor-pointer bg-card relative h-56"
+                onClick={handleViewSampleTrip}
+              >
+                <div className="absolute inset-0 z-0">
+                  <div className="relative w-full h-full">
+                    <Image 
+                      src="/images/tokyo-1.jpg" 
+                      alt="Sample Trip"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 100vw, 384px"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/10" />
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full">
-                    Sample Trip
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleViewSampleTrip();
-                    }}
-                  >
-                    View
-                  </Button>
+                <div className="absolute inset-0 z-10 p-4 flex flex-col justify-between">
+                  <div>
+                    <div className="font-medium text-lg mb-1 text-white">Summer in Japan</div>
+                    <div className="text-white/80 text-sm mb-1">
+                      Jul 10, 2023 - Jul 20, 2023
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs px-2 py-1 bg-blue-600/70 text-white rounded-full backdrop-blur-sm">
+                      Sample Trip
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        handleViewSampleTrip();
+                      }}
+                      className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border-white/20"
+                    >
+                      View Trip
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

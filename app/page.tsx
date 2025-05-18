@@ -1,24 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Hero from './components/landing/Hero';
+import DemoVideo from './components/landing/DemoVideo';
+import Features from './components/landing/Features';
+import CTA from './components/landing/CTA';
 
 export default function Home() {
-  const router = useRouter();
-  
-  useEffect(() => {
-    router.push('/trips');
-  }, [router]);
-  
-  // Display a loading state while redirecting
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center p-8">
-        <h1 className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-sky-500">
-          Trip Moodboard Builder
-        </h1>
-        <div className="mb-4">Redirecting to app...</div>
-      </div>
-    </div>
+    <main className="min-h-screen bg-background">
+      <Hero />
+      <DemoVideo />
+      <Features />
+      <CTA />
+    </main>
   );
 }

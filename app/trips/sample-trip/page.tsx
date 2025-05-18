@@ -10,11 +10,28 @@ import ExportButton from '../../components/ExportButton';
 import { MediaItem } from '../../types';
 import { getSampleTrip } from '../../utils/tripService';
 import Link from 'next/link';
+import Image from 'next/image';
+import Icon from '../../components/Icon';
+
+// Helper function to find the best image for a trip
+const getTripCoverImage = (trip) => {
+  if (!trip?.days) return null;
+  
+  for (const day of trip.days) {
+    if (!day.items) continue;
+    
+    const image = day.items.find(item => item.type === 'image');
+    if (image) return image.src;
+  }
+  
+  return null;
+};
 
 export default function SampleTripPage() {
   const router = useRouter();
   const [trip, setTrip] = useState(getSampleTrip());
   const [isUploaderVisible, setIsUploaderVisible] = useState(false);
+  const coverImage = getTripCoverImage(trip) || '/images/tokyo-1.jpg';
   
   const handleTripUpdate = (updatedTrip) => {
     setTrip(updatedTrip);
@@ -79,7 +96,7 @@ export default function SampleTripPage() {
   
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header */}
+      {/* Navigation Bar */}
       <div className="bg-card border-b border-border">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
@@ -102,7 +119,44 @@ export default function SampleTripPage() {
         </div>
       </div>
       
-      <Header trip={trip} />
+      {/* Enhanced Trip Header */}
+      <div className="relative">
+        <div className="relative h-48 md:h-64 w-full overflow-hidden">
+          <Image
+            src={coverImage}
+            alt={trip.title}
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-black/20" />
+          <div className="absolute inset-0 flex flex-col justify-center max-w-7xl mx-auto px-4 text-white">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xs px-2 py-1 bg-blue-600/70 rounded-full backdrop-blur-sm">
+                Sample Trip
+              </span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <Icon name="location" size={18} />
+                <span>{trip.days.length} days</span>
+              </div>
+              <span>•</span>
+              <div>
+                {new Date(trip.startDate).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric' 
+                })} - {new Date(trip.endDate).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric',
+                  year: 'numeric'
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Main Content */}
       <main className="flex-1">
