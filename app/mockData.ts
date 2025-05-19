@@ -82,7 +82,8 @@ export const sampleTrip: Trip = {
           type: "emoji",
           content: "🍜",
           position: { x: 80, y: 20 },
-          style: { rotate: 0, scale: 1.5 }
+          style: { rotate: 0, scale: 1.5 },
+          caption: "Amazing ramen!"
         }
       ]
     }

@@ -120,6 +120,24 @@ export async function exportDayAsImage(dayElement: HTMLElement): Promise<HTMLCan
       }
     });
 
+    // Enhance emoji sticker captions for better visibility
+    // Use more specific selector to target only emoji caption elements
+    const emojiCaptions = elementClone.querySelectorAll('.sticker-container .text-3xl + div, .absolute .text-3xl + div.mt-1');
+    emojiCaptions.forEach((captionElement) => {
+      const caption = captionElement as HTMLElement;
+      // Make caption background more opaque and ensure good contrast in exported images
+      caption.style.backgroundColor = 'rgba(255, 255, 255, 0.95)'; 
+      caption.style.color = '#111827';
+      caption.style.fontWeight = '600';
+      caption.style.padding = '4px 8px';
+      caption.style.borderRadius = '4px';
+      caption.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+      caption.style.marginTop = '4px';
+      caption.style.textAlign = 'center';
+      caption.style.maxWidth = '120px';
+      caption.style.zIndex = '20';
+    });
+
     // Set some options to make the image look better
     const canvas = await html2canvas(elementClone, {
       scale: 2, // Higher resolution

@@ -144,13 +144,13 @@ export default function SampleTripPage() {
               </span>
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">{trip.title}</h1>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3 bg-transparent">
+              <div className="flex items-center gap-2 bg-transparent">
                 <Icon name="location" size={18} />
-                <span>{trip.days.length} days</span>
+                <span className="bg-transparent">{trip.days.length} days</span>
               </div>
-              <span>•</span>
-              <div>
+              <span className="bg-transparent">•</span>
+              <div className="bg-transparent">
                 {new Date(trip.startDate).toLocaleDateString('en-US', { 
                   month: 'short', 
                   day: 'numeric' 

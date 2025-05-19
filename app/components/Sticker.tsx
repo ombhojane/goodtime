@@ -8,13 +8,16 @@ interface StickerProps {
   sticker: StickerType;
   onMove?: (id: string, position: { x: number; y: number }) => void;
   onDelete?: (id: string) => void;
+  onEditCaption?: (id: string, caption: string) => void;
   isEditable?: boolean;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function Sticker({ sticker, onMove, onDelete, isEditable = true, containerRef }: StickerProps) {
+export default function Sticker({ sticker, onMove, onDelete, onEditCaption, isEditable = true, containerRef }: StickerProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [showControls, setShowControls] = useState(false);
+  const [isEditingCaption, setIsEditingCaption] = useState(false);
+  const [captionInput, setCaptionInput] = useState(sticker.caption || '');
   const dragOffset = useRef({ x: 0, y: 0 });
   const stickerRef = useRef<HTMLDivElement>(null);
 
@@ -101,17 +104,64 @@ export default function Sticker({ sticker, onMove, onDelete, isEditable = true, 
     top: `${sticker.position.y}%`,
   };
 
+  // Handle click to edit caption
+  const handleStickerClick = (e: React.MouseEvent) => {
+    if (sticker.type === 'emoji' && isEditable && !isDragging) {
+      e.stopPropagation();
+      setIsEditingCaption(true);
+      setCaptionInput(sticker.caption || '');
+    }
+  };
+
+  // Save caption
+  const handleCaptionSave = () => {
+    setIsEditingCaption(false);
+    if (onEditCaption && captionInput !== sticker.caption) {
+      onEditCaption(sticker.id, captionInput);
+    }
+  };
+
   return (
     <div
       ref={stickerRef}
-      className={`absolute cursor-move select-none ${isDragging ? 'z-50' : 'z-10'}`}
+      className={`absolute cursor-move select-none sticker-container ${isDragging ? 'z-50' : 'z-10'}`}
       style={transformStyle}
       onMouseDown={isEditable ? handleMouseDown : undefined}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
+      onClick={handleStickerClick}
     >
       <div className={`rounded-md ${getBgColor()} ${getSize()} shadow-sm`}>
         {sticker.content}
+        {sticker.type === 'emoji' && !isEditingCaption && sticker.caption && (
+          <div className="mt-1 px-2 py-1 text-xs font-medium bg-white/80 dark:bg-gray-800/90 text-gray-900 dark:text-white rounded-md shadow-sm backdrop-blur-sm">
+            {sticker.caption}
+          </div>
+        )}
+        {sticker.type === 'emoji' && isEditingCaption && (
+          <div className="mt-1 flex flex-col items-center">
+            <input
+              className="px-2 py-1 text-xs rounded-md border border-border bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary"
+              value={captionInput}
+              autoFocus
+              maxLength={30}
+              onChange={e => setCaptionInput(e.target.value)}
+              onBlur={handleCaptionSave}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleCaptionSave();
+                if (e.key === 'Escape') setIsEditingCaption(false);
+              }}
+              placeholder="Add a caption..."
+            />
+            <button
+              className="mt-1 text-xs text-primary underline hover:no-underline"
+              onMouseDown={e => e.preventDefault()}
+              onClick={handleCaptionSave}
+            >
+              Save
+            </button>
+          </div>
+        )}
       </div>
       
       {/* Delete button */}

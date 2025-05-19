@@ -91,14 +91,14 @@ export default function MediaItem({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="relative aspect-[5/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
         {item.type === 'image' && (
           <div className="w-full h-full bg-muted overflow-hidden group">
             <Image
               src={imageError ? '/fallback-image.png' : item.src}
               alt={item.caption || 'Travel memory'}
-              width={500}
-              height={300}
+              width={600}
+              height={450}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={handleImageError}
             />

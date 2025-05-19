@@ -26,6 +26,7 @@ export interface Sticker {
     rotate?: number;
     scale?: number;
   };
+  caption?: string;
 }
 
 export interface TimelineDay {

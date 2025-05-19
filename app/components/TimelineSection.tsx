@@ -14,6 +14,7 @@ interface TimelineSectionProps {
   onMediaClick?: (item: MediaItemType) => void;
   onStickerMove?: (id: string, position: { x: number; y: number }) => void;
   onStickerDelete?: (id: string) => void;
+  onStickerEditCaption?: (id: string, caption: string) => void;
   isEditable?: boolean;
   onSectionClick?: () => void;
   isAddingStickerMode?: boolean;
@@ -29,6 +30,7 @@ export default function TimelineSection({
   onMediaClick,
   onStickerMove,
   onStickerDelete,
+  onStickerEditCaption,
   isEditable = true,
   onSectionClick,
   isAddingStickerMode = false,
@@ -73,7 +75,7 @@ export default function TimelineSection({
   
   return (
     <div 
-      className={`timeline-section min-w-[98vw] md:min-w-[94vw] lg:min-w-[90vw] xl:min-w-[86vw] snap-start p-4 md:p-6 lg:p-8 transition-colors duration-300 ${
+      className={`timeline-section min-w-[80vw] md:min-w-[85vw] lg:min-w-[70vw] xl:min-w-[65vw] snap-start p-4 md:p-6 lg:p-8 transition-colors duration-300 ${
         isAddingStickerMode ? 'sticker-add-mode hover:bg-muted/50' : ''
       }`}
       onClick={handleSectionClick}
@@ -100,6 +102,7 @@ export default function TimelineSection({
             sticker={sticker}
             onMove={onStickerMove}
             onDelete={onStickerDelete}
+            onEditCaption={onStickerEditCaption}
             isEditable={isEditable && !isAddingStickerMode}
             containerRef={containerRef}
           />
@@ -122,7 +125,7 @@ export default function TimelineSection({
                 <h3 className="capitalize font-medium">{tod}</h3>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
                 {items.map((item, index) => (
                   <div key={item.id} className="transform transition-all duration-500" style={{ 
                     transitionDelay: `${index * 50}ms`,
@@ -151,7 +154,7 @@ export default function TimelineSection({
               <span className="text-5xl">📷</span>
             </div>
             <p className="text-xl font-medium mb-2">Awaiting Your Memories</p>
-            <p className="text-sm text-muted-foreground">Capture this day's special moments with photos</p>
+            <p className="text-sm text-muted-foreground">Capture this day&apos;s special moments with photos</p>
             {isEditable && (
               <div className="mt-4">
                 <button className="bg-primary/10 text-primary hover:bg-primary/20 transition-colors px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2">

@@ -19,6 +19,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
   const [isAddingStickerMode, setIsAddingStickerMode] = useState(false);
   const [stickerType, setStickerType] = useState<'emoji' | 'text' | 'location' | 'category'>('emoji');
   const [stickerContent, setStickerContent] = useState('');
+  const [stickerCaption, setStickerCaption] = useState('');
   const [isDraggingMedia, setIsDraggingMedia] = useState(false);
   const [draggedItem, setDraggedItem] = useState<{
     item: MediaItem,
@@ -32,7 +33,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
   
   const handleScroll = (direction: 'left' | 'right') => {
     if (timelineRef.current) {
-      const scrollAmount = direction === 'left' ? -600 : 600;
+      const scrollAmount = direction === 'left' ? -window.innerWidth * 0.7 : window.innerWidth * 0.7;
       timelineRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
   };
@@ -75,6 +76,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
       type,
       content,
       position: { x: 50, y: 50 },
+      caption: type === 'emoji' ? stickerCaption : undefined,
       style: {
         rotate: Math.floor(Math.random() * 20) - 10,
         scale: Math.random() * 0.3 + 0.9
@@ -87,6 +89,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
     onUpdate(updatedTrip);
     setIsAddingStickerMode(false);
     setStickerContent('');
+    setStickerCaption('');
   };
   
   // Handle drag-and-drop functionality
@@ -277,6 +280,20 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
     }
   };
   
+  // Add this handler to update sticker caption
+  const handleStickerEditCaption = (dayIndex: number, stickerId: string, caption: string) => {
+    if (!onUpdate || isReadOnly) return;
+    const updatedTrip = { ...trip };
+    const stickerIndex = updatedTrip.days[dayIndex].stickers.findIndex(s => s.id === stickerId);
+    if (stickerIndex !== -1) {
+      updatedTrip.days[dayIndex].stickers[stickerIndex] = {
+        ...updatedTrip.days[dayIndex].stickers[stickerIndex],
+        caption,
+      };
+      onUpdate(updatedTrip);
+    }
+  };
+  
   return (
     <div className="w-full">
       {/* Timeline controls */}
@@ -360,6 +377,17 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
                     </button>
                   ))}
                 </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium mb-2">Add caption (optional):</h3>
+                  <input
+                    type="text"
+                    className="w-full p-2 border rounded-md"
+                    value={stickerCaption}
+                    onChange={(e) => setStickerCaption(e.target.value)}
+                    placeholder="Enter caption for emoji..."
+                    maxLength={30}
+                  />
+                </div>
               </div>
             )}
             
@@ -435,10 +463,12 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
       <div className="relative">
         <div 
           ref={timelineRef}
-          className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory ${isDraggingMedia ? 'bg-muted/30' : ''}`}
+          className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory gap-4 ${isDraggingMedia ? 'bg-muted/30' : ''}`}
           style={{ 
             scrollbarWidth: 'none', 
             WebkitOverflowScrolling: 'touch',
+            scrollSnapType: 'x proximity',
+            paddingRight: '2rem'
           }}
         >
           {trip.days.map((day, index) => (
@@ -451,6 +481,7 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
               onMediaClick={handleMediaClick}
               onStickerMove={(id, position) => handleStickerMove(index, id, position)}
               onStickerDelete={(id) => handleStickerDelete(index, id)}
+              onStickerEditCaption={(id, caption) => handleStickerEditCaption(index, id, caption)}
               isEditable={isEditable}
               isAddingStickerMode={isAddingStickerMode && !!stickerContent}
               onSectionClick={() => handleAddSticker(index, stickerType, stickerContent)}
@@ -463,10 +494,11 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
         {/* Scroll indicators */}
         {trip.days.length > 1 && (
           <>
-            <div className="hidden md:block absolute top-0 bottom-0 right-0 w-24 pointer-events-none bg-gradient-to-l from-background to-transparent" />
-            <div className="hidden md:block absolute top-1/2 right-4 transform -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 shadow-md text-muted-foreground animate-pulse">
+            <div className="absolute top-0 bottom-0 right-0 w-16 pointer-events-none bg-gradient-to-l from-background to-transparent" />
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-background/80 backdrop-blur-sm rounded-full p-2 shadow-md text-primary animate-pulse">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
             </div>
+            <div className="absolute top-0 bottom-0 left-0 w-16 pointer-events-none bg-gradient-to-r from-background to-transparent" />
           </>
         )}
       </div>
