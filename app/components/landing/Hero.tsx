@@ -4,6 +4,14 @@ import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import Image from 'next/image';
 
+// Array of avatar images for the social proof section
+const avatars = [
+  '/images/avatars/avatar-1.jpg',
+  '/images/avatars/avatar-2.jpg',
+  '/images/avatars/avatar-3.jpg',
+  '/images/avatars/avatar-4.jpg',
+];
+
 export default function Hero() {
   const router = useRouter();
   
@@ -74,12 +82,26 @@ export default function Hero() {
               </Button>
             </div>
             
-            {/* Social proof */}
+            {/* Social proof with avatar images */}
             <div className="mt-12 flex items-center justify-center lg:justify-start">
               <div className="flex -space-x-3 mr-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full ring-2 ring-background bg-muted flex items-center justify-center text-xs font-medium">
-                    {i}
+                {avatars.map((avatar, index) => (
+                  <div 
+                    key={index} 
+                    className="w-8 h-8 rounded-full ring-2 ring-background relative overflow-hidden"
+                  >
+                    <Image 
+                      src={avatar} 
+                      alt={`User ${index + 1}`} 
+                      fill
+                      sizes="32px"
+                      className="object-cover"
+                      // Use a fallback avatar in case the image fails to load
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = `https://ui-avatars.com/api/?name=User+${index + 1}&background=random`;
+                      }}
+                    />
                   </div>
                 ))}
               </div>
@@ -92,28 +114,28 @@ export default function Hero() {
             <div className="relative h-[500px] w-full perspective-1000">
               <div className="absolute top-0 right-0 w-[80%] h-[60%] rounded-xl overflow-hidden shadow-2xl transform rotate-2 transition-transform hover:rotate-1 hover:scale-105 z-20">
                 <Image 
-                  src="/images/tokyo-1.jpg" 
-                  alt="Travel mood board" 
+                  src="/images/kashmir.png" 
+                  alt="kashmir" 
                   fill
                   className="object-cover"
                   priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 text-sm font-medium text-black">
-                  Day 3: Tokyo, Japan
+                  Day 3: Kashmir
                 </div>
               </div>
               
               <div className="absolute bottom-0 left-0 w-[70%] h-[65%] rounded-xl overflow-hidden shadow-2xl transform -rotate-3 transition-transform hover:rotate-0 hover:scale-105 z-10">
                 <Image 
-                  src="/images/kyoto-1.jpg" 
+                  src="/images/alleppey.png" 
                   alt="Trip timeline" 
                   fill
                   className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 text-sm font-medium text-black">
-                  Day 5: Kyoto, Japan
+                  Day 5: Alleppey Backwaters
                 </div>
               </div>
               
