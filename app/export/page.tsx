@@ -78,14 +78,10 @@ export default function ExportPage() {
       };
 
       if (exportFormat === 'image') {
-        // For image export, we simulate steps
-        setExportProgress(30);
-        setExportStatus('Crafting your story canvas...');
-        await exportTimelineAsImages(trip);
-        setExportProgress(100);
-        setExportStatus('Your travel story is ready to share!');
+        // Use the progress callback for image export too
+        await exportTimelineAsImages(trip, updateProgress);
       } else {
-        // For PDF, we use the progress callback
+        // For PDF, we continue using the progress callback
         await exportTimelineAsPDF(trip, updateProgress);
       }
 
@@ -228,7 +224,7 @@ export default function ExportPage() {
                             <Icon name="check" size={20} className="text-primary" />
                           )}
                         </div>
-                        <p className="text-sm mt-1 text-muted-foreground">Multi-page document showcasing each day's adventures</p>
+                        <p className="text-sm mt-1 text-muted-foreground">Multi-page document showcasing each day&apos;s adventures</p>
                         <div className="mt-2 flex items-center gap-2 text-xs text-primary/80">
                           <Icon name="printer" size={14} />
                           <span>Great for printing and sharing via email</span>
@@ -358,7 +354,7 @@ export default function ExportPage() {
             <span>Preserve your travel memories forever</span>
           </div>
           <div className="flex flex-wrap items-center gap-4">
-            <Link href={`/trips/${trip.slug}`} className="text-primary hover:underline">
+            <Link href={`/trips/${trip.id}`} className="text-primary hover:underline">
               Back to Journey
             </Link>
           </div>

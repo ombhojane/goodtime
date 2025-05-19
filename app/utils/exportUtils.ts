@@ -9,14 +9,129 @@ import { Trip } from '../types';
  */
 export async function exportDayAsImage(dayElement: HTMLElement): Promise<HTMLCanvasElement> {
   try {
+    // Create a clone of the element to avoid modifying the original DOM
+    const elementClone = dayElement.cloneNode(true) as HTMLElement;
+    document.body.appendChild(elementClone);
+    elementClone.style.position = 'absolute';
+    elementClone.style.top = '-9999px';
+    elementClone.style.width = `${dayElement.offsetWidth}px`;
+    
+    // Set the background color to dark grey
+    elementClone.style.backgroundColor = '#111827'; // Dark grey background
+    elementClone.style.color = '#ffffff'; // White text for dark background
+    elementClone.style.padding = '24px'; // Add some padding
+    
+    // Apply fixes to ensure proper rendering in the exported image
+    
+    // Fix for time-of-day headers - Use stronger colors with better contrast
+    const timeOfDayHeaders = elementClone.querySelectorAll('[class*="bg-amber"], [class*="bg-blue"], [class*="bg-orange"], [class*="bg-indigo"]');
+    timeOfDayHeaders.forEach((header) => {
+      const element = header as HTMLElement;
+      // Override background with more vibrant colors for better visibility
+      if (element.className.includes('bg-amber')) {
+        element.style.backgroundColor = '#f59e0b'; // amber-500 for more contrast
+        element.style.color = '#ffffff'; // white text for contrast
+      } else if (element.className.includes('bg-blue')) {
+        element.style.backgroundColor = '#3b82f6'; // blue-500 for more contrast
+        element.style.color = '#ffffff'; // white text for contrast
+      } else if (element.className.includes('bg-orange')) {
+        element.style.backgroundColor = '#f97316'; // orange-500 for more contrast
+        element.style.color = '#ffffff'; // white text for contrast
+      } else if (element.className.includes('bg-indigo')) {
+        element.style.backgroundColor = '#6366f1'; // indigo-500 for more contrast
+        element.style.color = '#ffffff'; // white text for contrast
+      }
+    });
+    
+    // Specifically style the night header for better visibility on dark background
+    const nightHeaders = elementClone.querySelectorAll('[class*="night"]');
+    nightHeaders.forEach((header) => {
+      const nightHeader = header as HTMLElement;
+      // Use a more vibrant color for night header on dark background
+      if (nightHeader.textContent?.toLowerCase().includes('night')) {
+        nightHeader.style.backgroundColor = '#4f46e5'; // indigo-600
+        nightHeader.style.color = '#ffffff';
+        nightHeader.style.padding = '16px';
+        nightHeader.style.borderRadius = '8px';
+      }
+    });
+    
+    // Fix for media items - Ensure images are clear and have proper contrast against dark background
+    const mediaItems = elementClone.querySelectorAll('.glass-card');
+    mediaItems.forEach((item) => {
+      const mediaItem = item as HTMLElement;
+      
+      // Adjust card styling for dark background
+      mediaItem.style.backgroundColor = '#1f2937'; // Slightly lighter dark grey
+      mediaItem.style.borderColor = '#374151'; // Border visible on dark background
+      mediaItem.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.5)'; // Stronger shadow for depth on dark background
+      
+      // Don't remove overlays that add visual style, just ensure they're not too dark
+      const overlays = mediaItem.querySelectorAll('.absolute.inset-0');
+      overlays.forEach((overlay) => {
+        const overlayElement = overlay as HTMLElement;
+        // Instead of removing, just adjust opacity to maintain some styling
+        if (overlayElement.className.includes('from-transparent') || 
+            overlayElement.className.includes('to-black')) {
+          overlayElement.style.opacity = '0.15'; // Reduced opacity instead of removal
+        }
+      });
+      
+      // Ensure image visibility with proper contrast
+      const images = mediaItem.querySelectorAll('img');
+      images.forEach((img) => {
+        const imgElement = img as HTMLImageElement;
+        imgElement.style.opacity = '1';
+        imgElement.style.filter = 'contrast(1.1) brightness(1.05)'; // Slightly boost contrast
+      });
+      
+      // Adjust text colors for visibility on dark background
+      const textElements = mediaItem.querySelectorAll('p, span');
+      textElements.forEach((textEl) => {
+        const textElement = textEl as HTMLElement;
+        // Keep caption text visible against dark background
+        if (textElement.textContent?.includes('No caption') || textElement.className.includes('muted')) {
+          textElement.style.color = '#9ca3af'; // grey-400 for better visibility on dark
+        } else {
+          textElement.style.color = '#ffffff'; // White text for other content
+        }
+      });
+    });
+    
+    // Enhance time indicator badges for better visibility on dark background
+    const timeIndicators = elementClone.querySelectorAll('[class*="absolute top-3 right-3"]');
+    timeIndicators.forEach((indicator) => {
+      const timeElement = indicator as HTMLElement;
+      timeElement.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+      timeElement.style.color = '#111827'; // Dark text
+      timeElement.style.fontWeight = '600'; // Semi-bold
+      timeElement.style.opacity = '1';
+      timeElement.style.boxShadow = '0 1px 3px 0 rgba(0,0,0,0.3)';
+    });
+    
+    // Fix for icons and text to ensure they're visible on dark background
+    const allText = elementClone.querySelectorAll('p, span, h1, h2, h3, h4, h5, h6');
+    allText.forEach((textElement) => {
+      const element = textElement as HTMLElement;
+      if (element.className.includes('text-muted')) {
+        element.style.color = '#9ca3af'; // grey-400 for better visibility on dark
+      } else if (!element.style.color) {
+        element.style.color = '#ffffff'; // Default to white text
+      }
+    });
+
     // Set some options to make the image look better
-    const canvas = await html2canvas(dayElement, {
+    const canvas = await html2canvas(elementClone, {
       scale: 2, // Higher resolution
       useCORS: true, // Enable cross-origin images
       allowTaint: true,
-      backgroundColor: window.getComputedStyle(document.body).backgroundColor || '#ffffff',
+      backgroundColor: '#111827', // Dark grey background
       logging: false,
+      removeContainer: false, // We'll handle removal ourselves
     });
+    
+    // Clean up the cloned element
+    document.body.removeChild(elementClone);
     
     return canvas;
   } catch (error) {
@@ -47,8 +162,8 @@ export async function createCombinedCanvas(canvases: HTMLCanvasElement[]): Promi
     throw new Error('Could not get canvas context');
   }
 
-  // Draw background
-  ctx.fillStyle = window.getComputedStyle(document.body).backgroundColor || '#ffffff';
+  // Draw dark grey background
+  ctx.fillStyle = '#111827'; // Dark grey background to match the individual canvases
   ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
 
   // Draw each canvas onto the combined canvas
@@ -65,8 +180,13 @@ export async function createCombinedCanvas(canvases: HTMLCanvasElement[]): Promi
 
 /**
  * Exports the entire trip timeline as a single combined image
+ * @param trip The trip to export
+ * @param onProgress Optional callback for progress updates (0-100)
  */
-export async function exportTimelineAsImages(trip: Trip): Promise<void> {
+export async function exportTimelineAsImages(
+  trip: Trip,
+  onProgress?: (progress: number) => void
+): Promise<void> {
   try {
     // Find all timeline day sections
     const daySections = document.querySelectorAll('.timeline-section');
@@ -74,6 +194,9 @@ export async function exportTimelineAsImages(trip: Trip): Promise<void> {
     if (daySections.length === 0) {
       throw new Error('No timeline sections found');
     }
+    
+    // Update initial progress
+    if (onProgress) onProgress(10);
     
     // Convert each day section to a canvas
     const dayCanvases: HTMLCanvasElement[] = [];
@@ -84,12 +207,26 @@ export async function exportTimelineAsImages(trip: Trip): Promise<void> {
       // Allow slight delay for rendering
       await new Promise(resolve => setTimeout(resolve, 100));
       
+      // Update progress during rendering phase
+      if (onProgress) {
+        const preparationProgress = 10;
+        const renderingProgress = 60;
+        const progressPerDay = renderingProgress / daySections.length;
+        onProgress(preparationProgress + Math.floor(progressPerDay * (i + 1)));
+      }
+      
       const canvas = await exportDayAsImage(daySection);
       dayCanvases.push(canvas);
     }
     
+    // Update progress for combination phase
+    if (onProgress) onProgress(70);
+    
     // Combine all day canvases into a single canvas
     const combinedCanvas = await createCombinedCanvas(dayCanvases);
+    
+    // Update progress for image processing
+    if (onProgress) onProgress(80);
     
     // Convert the combined canvas to a blob and download it
     const blob = await new Promise<Blob>((resolve) => {
@@ -97,6 +234,9 @@ export async function exportTimelineAsImages(trip: Trip): Promise<void> {
         resolve(blob!);
       }, 'image/png');
     });
+    
+    // Update progress before download
+    if (onProgress) onProgress(90);
     
     // Format the date range for the filename
     const startDate = new Date(trip.startDate).toLocaleDateString('en-US', { 
@@ -113,6 +253,9 @@ export async function exportTimelineAsImages(trip: Trip): Promise<void> {
     
     const fileName = `${trip.title} - ${startDate} to ${endDate}.png`;
     downloadBlob(blob, fileName);
+    
+    // Final progress update
+    if (onProgress) onProgress(100);
   } catch (error) {
     console.error('Error exporting timeline as images:', error);
     throw error;
@@ -149,6 +292,7 @@ export async function exportTimelineAsPDF(
         // Allow slight delay for rendering
         await new Promise(resolve => setTimeout(resolve, 100));
         
+        // Use our improved exportDayAsImage function to ensure consistent rendering
         const canvas = await exportDayAsImage(daySection);
         dayCanvases.push(canvas);
         
