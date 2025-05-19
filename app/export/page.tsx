@@ -10,6 +10,7 @@ import Timeline from '../components/Timeline';
 import Link from 'next/link';
 import Icon from '../components/Icon';
 import Image from 'next/image';
+import TripVideoExport from '../components/TripVideoExport';
 
 // Loading component for Suspense fallback
 function Loading() {
@@ -33,6 +34,7 @@ function ExportContent() {
   const [exportStatus, setExportStatus] = useState<string>('');
   const [showConfetti, setShowConfetti] = useState(false);
   const timelineRef = useRef<HTMLDivElement>(null);
+  const [isVideoExport, setIsVideoExport] = useState(false);
 
   useEffect(() => {
     const tripId = searchParams?.get('tripId');
@@ -48,6 +50,12 @@ function ExportContent() {
     }
 
     setTrip(tripData);
+    
+    // Check if this is a video export
+    const exportType = searchParams?.get('type');
+    if (exportType === 'video') {
+      setIsVideoExport(true);
+    }
   }, [searchParams, router]);
   
   // Show confetti when export is complete
@@ -167,87 +175,110 @@ function ExportContent() {
 
       {/* Main Content */}
       <main className="flex-1 container max-w-6xl mx-auto p-6 md:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Left Side: Export Options */}
-          <div className="lg:col-span-2 flex flex-col">
-            <div className="bg-card border border-border rounded-xl shadow-lg overflow-hidden mb-6">
-              <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 border-b border-border">
-                <h2 className="text-2xl font-bold">How will you remember this journey?</h2>
-                <p className="text-muted-foreground mt-2">Choose your perfect memento format</p>
-              </div>
-              
-              <div className="p-6">
-                {/* Format Selection */}
-                <div className="space-y-4">
-                  <label className={`
-                    relative block p-4 rounded-xl transition-all cursor-pointer
-                    ${exportFormat === 'image' 
-                      ? 'bg-primary/10 border-2 border-primary ring-1 ring-primary'
-                      : 'border border-border hover:border-primary/50'}
-                  `}>
-                    <input
-                      type="radio"
-                      name="format"
-                      className="sr-only"
-                      checked={exportFormat === 'image'}
-                      onChange={() => setExportFormat('image')}
-                    />
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <Icon name="image" size={28} className="text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <span className="font-medium text-lg">Story Canvas</span>
-                          {exportFormat === 'image' && (
-                            <Icon name="check" size={20} className="text-primary" />
-                          )}
-                        </div>
-                        <p className="text-sm mt-1 text-muted-foreground">One beautiful image that tells your whole trip story</p>
-                        <div className="mt-2 flex items-center gap-2 text-xs text-primary/80">
-                          <Icon name="star" size={14} />
-                          <span>Perfect for social media</span>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                  
-                  <label className={`
-                    relative block p-4 rounded-xl transition-all cursor-pointer
-                    ${exportFormat === 'pdf' 
-                      ? 'bg-primary/10 border-2 border-primary ring-1 ring-primary'
-                      : 'border border-border hover:border-primary/50'}
-                  `}>
-                    <input
-                      type="radio"
-                      name="format"
-                      className="sr-only"
-                      checked={exportFormat === 'pdf'}
-                      onChange={() => setExportFormat('pdf')}
-                    />
-                    <div className="flex items-start gap-4">
-                      <div className="bg-primary/10 p-3 rounded-lg">
-                        <Icon name="download" size={28} className="text-primary" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between">
-                          <span className="font-medium text-lg">Travel Book</span>
-                          {exportFormat === 'pdf' && (
-                            <Icon name="check" size={20} className="text-primary" />
-                          )}
-                        </div>
-                        <p className="text-sm mt-1 text-muted-foreground">Multi-page document showcasing each day&apos;s adventures</p>
-                        <div className="mt-2 flex items-center gap-2 text-xs text-primary/80">
-                          <Icon name="printer" size={14} />
-                          <span>Great for printing and sharing via email</span>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
+        {isVideoExport ? (
+          <div className="mb-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold flex items-center gap-2">
+                <Icon name="play" size={24} className="text-primary" />
+                <span>Create Video Story</span>
+              </h2>
+              <p className="text-muted-foreground">Generate a beautiful video from your trip memories</p>
+            </div>
+            
+            <TripVideoExport trip={trip} />
+            
+            <div className="mt-8 flex justify-center">
+              <Link 
+                href={`/trips/${trip.id}`}
+                className="flex items-center gap-2 text-primary hover:underline"
+              >
+                <Icon name="arrowLeft" size={16} />
+                <span>Return to Trip</span>
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            {/* Left Side: Export Options */}
+            <div className="lg:col-span-2 flex flex-col">
+              <div className="bg-card border border-border rounded-xl shadow-lg overflow-hidden mb-6">
+                <div className="bg-gradient-to-r from-primary/10 to-primary/5 p-6 border-b border-border">
+                  <h2 className="text-2xl font-bold">How will you remember this journey?</h2>
+                  <p className="text-muted-foreground mt-2">Choose your perfect memento format</p>
                 </div>
                 
-                {/* Export button */}
-                <div className="mt-8">
+                <div className="p-6">
+                  {/* Format Selection */}
+                  <div className="space-y-4">
+                    <label className={`
+                      relative block p-4 rounded-xl transition-all cursor-pointer
+                      ${exportFormat === 'image' 
+                        ? 'bg-primary/10 border-2 border-primary ring-1 ring-primary'
+                        : 'border border-border hover:border-primary/50'}
+                    `}>
+                      <input
+                        type="radio"
+                        name="format"
+                        className="sr-only"
+                        checked={exportFormat === 'image'}
+                        onChange={() => setExportFormat('image')}
+                      />
+                      <div className="flex items-start gap-4">
+                        <div className="bg-primary/10 p-3 rounded-lg">
+                          <Icon name="image" size={28} className="text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between">
+                            <span className="font-medium text-lg">Story Canvas</span>
+                            {exportFormat === 'image' && (
+                              <Icon name="check" size={20} className="text-primary" />
+                            )}
+                          </div>
+                          <p className="text-sm mt-1 text-muted-foreground">One beautiful image that tells your whole trip story</p>
+                          <div className="mt-2 flex items-center gap-2 text-xs text-primary/80">
+                            <Icon name="star" size={14} />
+                            <span>Perfect for social media</span>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                    
+                    <label className={`
+                      relative block p-4 rounded-xl transition-all cursor-pointer
+                      ${exportFormat === 'pdf' 
+                        ? 'bg-primary/10 border-2 border-primary ring-1 ring-primary'
+                        : 'border border-border hover:border-primary/50'}
+                    `}>
+                      <input
+                        type="radio"
+                        name="format"
+                        className="sr-only"
+                        checked={exportFormat === 'pdf'}
+                        onChange={() => setExportFormat('pdf')}
+                      />
+                      <div className="flex items-start gap-4">
+                        <div className="bg-primary/10 p-3 rounded-lg">
+                          <Icon name="download" size={28} className="text-primary" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between">
+                            <span className="font-medium text-lg">Travel Book</span>
+                            {exportFormat === 'pdf' && (
+                              <Icon name="check" size={20} className="text-primary" />
+                            )}
+                          </div>
+                          <p className="text-sm mt-1 text-muted-foreground">Multi-page document showcasing each day&apos;s adventures</p>
+                          <div className="mt-2 flex items-center gap-2 text-xs text-primary/80">
+                            <Icon name="printer" size={14} />
+                            <span>Great for printing and sharing via email</span>
+                          </div>
+                        </div>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  {/* Export button */}
+                  <div className="mt-8">
                   <Button 
                     variant={isExporting ? "outline" : "primary"}
                     onClick={handleExport}
@@ -355,6 +386,7 @@ function ExportContent() {
             </div>
           </div>
         </div>
+        )}
       </main>
       
       {/* Footer */}

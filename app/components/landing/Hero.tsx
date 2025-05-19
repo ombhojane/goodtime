@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '../Button';
 import Image from 'next/image';
+import StoryPlayer from '../StoryPlayer';
+import { sampleTrip } from '../../mockData';
 
 // Array of avatar images for the social proof section
 const avatars = [
@@ -14,13 +17,14 @@ const avatars = [
 
 export default function Hero() {
   const router = useRouter();
+  const [showStoryPlayer, setShowStoryPlayer] = useState(false);
   
   const handleCreateTrip = () => {
     router.push('/trips/create');
   };
   
-  const handleViewDemo = () => {
-    router.push('/trips/sample-trip');
+  const handleToggleStoryPlayer = () => {
+    setShowStoryPlayer(!showStoryPlayer);
   };
   
   return (
@@ -75,10 +79,11 @@ export default function Hero() {
               <Button 
                 variant="outline" 
                 size="lg" 
-                onClick={handleViewDemo}
+                onClick={handleToggleStoryPlayer}
                 className="hover:-translate-y-1 transition-transform"
+                icon="timeline"
               >
-                See Magic in Action
+                Try Story Player
               </Button>
             </div>
             
@@ -145,15 +150,26 @@ export default function Hero() {
             </div>
             
             {/* Floating label */}
-            <div className="absolute -top-6 -right-4 bg-card shadow-lg rounded-full py-2 px-4 text-sm font-medium border border-border animate-bounce z-30">
+            <div 
+              className="absolute -top-6 -right-4 bg-card shadow-lg rounded-full py-2 px-4 text-sm font-medium border border-border animate-bounce z-30 cursor-pointer"
+              onClick={handleToggleStoryPlayer}
+            >
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                New: AI Memory Curator
+                New: Story player
               </div>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Story Player Modal */}
+      {showStoryPlayer && (
+        <StoryPlayer 
+          trip={sampleTrip} 
+          onClose={handleToggleStoryPlayer} 
+        />
+      )}
     </section>
   );
 } 

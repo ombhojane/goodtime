@@ -292,6 +292,15 @@ export default function TripPage() {
               >
                 Add Photos
               </Button>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => router.push(`/export?tripId=${trip.id}&type=video`)}
+                icon="play"
+                className="border-primary/30 hover:border-primary hover:bg-primary/5"
+              >
+                Story Player
+              </Button>
               <ExportButton trip={trip} />
             </div>
           </div>
