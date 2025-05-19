@@ -52,7 +52,7 @@ export default function CTA() {
                   <div className="absolute top-0 left-0 w-40 h-40 transform -translate-x-1/4 -translate-y-1/4">
                     <div className="w-full h-full relative rounded-2xl overflow-hidden border-4 border-white/20 shadow-lg rotate-6 hover:rotate-3 transition-transform duration-500">
                       <Image 
-                        src="/images/kyoto-1.jpg" 
+                        src="/images/kyoto-temple.jpg" 
                         alt="Travel memory" 
                         className="object-cover"
                         fill
@@ -66,7 +66,7 @@ export default function CTA() {
                   <div className="absolute bottom-0 right-0 w-48 h-48 transform translate-x-1/4 translate-y-1/4">
                     <div className="w-full h-full relative rounded-2xl overflow-hidden border-4 border-white/20 shadow-lg -rotate-12 hover:-rotate-6 transition-transform duration-500">
                       <Image 
-                        src="/images/osaka-1.jpg" 
+                        src="/images/tokyo-dinner.jpg" 
                         alt="Travel memory" 
                         className="object-cover"
                         fill
