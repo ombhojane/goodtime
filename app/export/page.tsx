@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Trip } from '../types';
 import { getTripById } from '../utils/tripService';
@@ -11,7 +11,19 @@ import Link from 'next/link';
 import Icon from '../components/Icon';
 import Image from 'next/image';
 
-export default function ExportPage() {
+// Loading component for Suspense fallback
+function Loading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="text-center p-8">
+        <div className="mb-4">Loading your journey...</div>
+      </div>
+    </div>
+  );
+}
+
+// Main component content that uses useSearchParams
+function ExportContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [trip, setTrip] = useState<Trip | null>(null);
@@ -419,5 +431,14 @@ export default function ExportPage() {
         }
       `}</style>
     </div>
+  );
+}
+
+// Main export page component with Suspense boundary
+export default function ExportPage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <ExportContent />
+    </Suspense>
   );
 } 
