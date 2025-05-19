@@ -463,12 +463,13 @@ export default function Timeline({ trip, onUpdate, isEditable = true, isReadOnly
       <div className="relative">
         <div 
           ref={timelineRef}
-          className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory gap-4 ${isDraggingMedia ? 'bg-muted/30' : ''}`}
+          className={`timeline-container hide-scrollbar overflow-x-auto flex snap-x snap-mandatory gap-6 ${isDraggingMedia ? 'bg-muted/30' : ''}`}
           style={{ 
             scrollbarWidth: 'none', 
             WebkitOverflowScrolling: 'touch',
             scrollSnapType: 'x proximity',
-            paddingRight: '2rem'
+            paddingRight: '3rem',
+            paddingLeft: '1rem'
           }}
         >
           {trip.days.map((day, index) => (

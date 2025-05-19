@@ -125,7 +125,7 @@ export default function TimelineSection({
                 <h3 className="capitalize font-medium">{tod}</h3>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 {items.map((item, index) => (
                   <div key={item.id} className="transform transition-all duration-500" style={{ 
                     transitionDelay: `${index * 50}ms`,

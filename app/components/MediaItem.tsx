@@ -74,16 +74,10 @@ export default function MediaItem({
     hour12: true,
   });
 
-  // Get the time of day color theme for accents
-  const timeOfDayColorClass = 
-    time === 'morning' ? 'bg-amber-500 text-amber-50' :
-    time === 'afternoon' ? 'bg-sky-500 text-sky-50' :
-    time === 'evening' ? 'bg-orange-500 text-orange-50' : 'bg-indigo-500 text-indigo-50';
-
   return (
     <div 
       className={`glass-card rounded-xl overflow-hidden shadow-md border border-border transform transition-all duration-300 
-        hover:shadow-xl ${isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02] hover:-translate-y-1'}`}
+        hover:shadow-xl p-1 ${isDragging ? 'opacity-50 scale-95' : 'hover:scale-[1.02] hover:-translate-y-1'}`}
       onClick={() => onClick && onClick(item)}
       draggable={draggable}
       onDragStart={handleDragStart}
@@ -91,14 +85,14 @@ export default function MediaItem({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
         {item.type === 'image' && (
           <div className="w-full h-full bg-muted overflow-hidden group">
             <Image
               src={imageError ? '/fallback-image.png' : item.src}
               alt={item.caption || 'Travel memory'}
-              width={600}
-              height={450}
+              width={640}
+              height={480}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               onError={handleImageError}
             />
