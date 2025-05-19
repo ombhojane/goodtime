@@ -1,9 +1,20 @@
 'use client';
 
+import { useState, useRef } from 'react';
 import Button from '../Button';
 import Icon from '../Icon';
 
 export default function DemoVideo() {
+  const [isMuted, setIsMuted] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const toggleSound = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(!isMuted);
+    }
+  };
+
   return (
     <section className="py-24 relative overflow-hidden bg-gradient-to-b from-background via-muted/20 to-background">
       {/* Decorative elements */}
@@ -35,6 +46,7 @@ export default function DemoVideo() {
         {/* Simple direct video player */}
         <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-5xl mx-auto">
           <video 
+            ref={videoRef}
             className="w-full aspect-video rounded-xl" 
             autoPlay
             muted
@@ -50,6 +62,15 @@ export default function DemoVideo() {
               instead.
             </p>
           </video>
+          
+          {/* Sound toggle button */}
+          <button 
+            onClick={toggleSound}
+            className="absolute bottom-4 right-4 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors z-10"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+          >
+            <Icon name={isMuted ? "volume-x" : "volume-2"} size={20} />
+          </button>
         </div>
         
         <div className="mt-12 text-center">
