@@ -148,7 +148,7 @@ export default function Hero() {
             <div className="absolute -top-6 -right-4 bg-card shadow-lg rounded-full py-2 px-4 text-sm font-medium border border-border animate-bounce z-30">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                New: AI Memory Curator
+                New: Create Video Stories
               </div>
             </div>
           </div>

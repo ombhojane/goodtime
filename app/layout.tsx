@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Trip Moodboard Builder",
-  description: "Create visual timeline-based moodboards for your travel memories",
+  title: "In the Motion",
+  description: "Create beautiful visual stories from your travel memories",
 };
 
 export default function RootLayout({

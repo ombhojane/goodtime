@@ -289,8 +289,8 @@ function ExportContent() {
                     {isExporting 
                       ? 'Creating your memento...' 
                       : exportFormat === 'image' 
-                        ? 'Create Your Story Canvas' 
-                        : 'Create Your Travel Book'}
+                                              ? 'Create Your Visual Story' 
+                      : 'Create Your Travel Book'}
                   </Button>
                   
                   {/* Progress bar & status */}
@@ -393,7 +393,7 @@ function ExportContent() {
       <footer className="mt-auto border-t border-border bg-muted/30 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-4 flex flex-wrap justify-between items-center text-sm text-muted-foreground gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-foreground">Trip Moodboard</span>
+            <span className="font-medium text-foreground">In the Motion</span>
             <span>•</span>
             <span>Preserve your travel memories forever</span>
           </div>

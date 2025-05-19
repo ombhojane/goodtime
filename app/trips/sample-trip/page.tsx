@@ -214,7 +214,7 @@ export default function SampleTripPage() {
       {/* Footer */}
       <footer className="bg-card shadow-inner mt-auto border-t border-border">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center text-sm text-muted-foreground">
-          <div>Trip Moodboard Builder</div>
+          <div>In the Motion</div>
           <Link href="/trips" className="text-primary hover:underline">
             Back to All Trips
           </Link>

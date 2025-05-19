@@ -47,7 +47,7 @@ export default function Navbar() {
               <div className="flex items-center justify-center w-8 h-8 bg-primary/20 rounded-md">
                 <Icon name="map" size={18} className="text-primary" />
               </div>
-              <span className="font-medium text-lg hidden sm:block">Trip Moodboard</span>
+              <span className="font-medium text-lg hidden sm:block">In the Motion</span>
             </Link>
           </div>
           

@@ -30,7 +30,7 @@ export default function ExportButton({ trip }: ExportButtonProps) {
     };
   }, []);
   
-  const handleExportMoodboard = () => {
+  const handleExportVisualStory = () => {
     setIsExporting(true);
     // Navigate to export page with trip ID
     router.push(`/export?tripId=${trip.id}`);
@@ -63,12 +63,12 @@ export default function ExportButton({ trip }: ExportButtonProps) {
         <div className="absolute right-0 mt-2 w-64 bg-card rounded-lg border border-border shadow-lg overflow-hidden z-50 animate-in fade-in slide-in-from-top-5 duration-200">
           <div className="py-1">
             <button
-              onClick={handleExportMoodboard}
+              onClick={handleExportVisualStory}
               className="flex items-center gap-3 w-full px-4 py-3 text-left text-sm hover:bg-muted transition-colors"
             >
               <Icon name="image" size={18} className="text-primary" />
               <div>
-                <div className="font-medium">Export Moodboard</div>
+                <div className="font-medium">Export Visual Story</div>
                 <div className="text-xs text-muted-foreground mt-0.5">Create a shareable image or PDF</div>
               </div>
             </button>

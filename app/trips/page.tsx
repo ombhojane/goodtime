@@ -141,7 +141,7 @@ export default function TripsPage() {
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Begin Your Adventure</h3>
                 <p className="text-muted-foreground max-w-md mb-8">
-                  Capture your travel memories in beautiful moodboards that tell your story.
+                  Capture your travel memories in beautiful visual moodboards that tell your journey.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button
@@ -300,7 +300,7 @@ export default function TripsPage() {
                 </span>
                 <h3 className="text-3xl font-bold text-white mb-3">Summer in Japan</h3>
                 <p className="text-white/90 max-w-lg mb-6">
-                  Explore a beautiful 10-day journey through Tokyo, Kyoto, and Osaka. See how to organize your photos, notes, and memories into a stunning moodboard.
+                  Explore a beautiful 10-day journey through Tokyo, Kyoto, and Osaka. See how to organize your photos, notes, and memories into a stunning visual moodboards.
                 </p>
                 
                 <Button
@@ -346,7 +346,7 @@ export default function TripsPage() {
                 <Icon name="download" size={20} className="text-primary" />
               </div>
               <h3 className="font-medium text-lg mb-2">Share Your Stories</h3>
-              <p className="text-muted-foreground text-sm">Export your journeys as beautiful moodboards to share with friends or print as keepsakes.</p>
+              <p className="text-muted-foreground text-sm">Export your journeys as beautiful visual stories to share with friends or print as keepsakes.</p>
             </div>
           </div>
         </section>
@@ -356,10 +356,10 @@ export default function TripsPage() {
       <footer className="mt-auto border-t border-border bg-muted/30 backdrop-blur-sm">
         <div className="container mx-auto px-6 py-8 flex flex-wrap justify-between items-center text-sm text-muted-foreground gap-4">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-            <div className="flex items-center gap-2">
-              <Icon name="compass" size={18} className="text-primary" />
-              <span className="font-medium text-foreground">Trip Moodboard</span>
-            </div>
+                      <div className="flex items-center gap-2">
+            <Icon name="compass" size={18} className="text-primary" />
+            <span className="font-medium text-foreground">In the Motion</span>
+          </div>
             <div className="hidden sm:block">•</div>
             <span>Crafting beautiful travel memories</span>
           </div>

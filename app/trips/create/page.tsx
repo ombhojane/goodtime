@@ -67,7 +67,7 @@ export default function CreateTripPage() {
         <div className="container mx-auto px-6 py-4 flex justify-between items-center text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Icon name="compass" size={16} className="text-primary" />
-            <span className="font-medium text-foreground">Trip Moodboard</span>
+            <span className="font-medium text-foreground">In the Motion</span>
           </div>
         </div>
       </footer>

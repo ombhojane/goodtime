@@ -25,7 +25,7 @@ interface StoredTrip {
 }
 
 // Array key for all trip metadata in localStorage
-const TRIPS_STORAGE_KEY = 'trip_moodboard_trips';
+const TRIPS_STORAGE_KEY = 'in_the_motion_trips';
 
 // Get trip metadata list
 export function getTripsList(): StoredTrip[] {
