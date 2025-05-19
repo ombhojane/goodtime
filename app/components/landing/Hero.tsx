@@ -16,47 +16,81 @@ export default function Hero() {
   };
   
   return (
-    <section className="relative bg-gradient-to-b from-background to-background/90">
-      {/* Background pattern/decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-        <div className="absolute -top-1/2 -right-1/2 w-full h-full bg-gradient-to-br from-teal-300/30 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-1/2 -left-1/2 w-full h-full bg-gradient-to-tr from-sky-300/30 to-transparent rounded-full blur-3xl"></div>
+    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+      {/* Immersive background with animated elements */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-teal-400/5 to-sky-500/5"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-teal-400/10 blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 rounded-full bg-sky-400/10 blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-5 mix-blend-overlay">
+          <svg width="100%" height="100%">
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 0 10 L 40 10 M 10 0 L 10 40" stroke="currentColor" strokeWidth="0.5" fill="none" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 pt-20 pb-16 sm:pt-32 sm:pb-24 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
-              <span className="block text-foreground">Craft your journey,</span>
-              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-sky-500">
-                capture the moments
-              </span>
+          <div className="text-center lg:text-left">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary font-medium text-sm mb-8">
+              <span className="mr-2">✨</span>
+              <span>Reimagine your travel memories</span>
+            </div>
+            
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-tight">
+              Your <span className="relative inline-block">
+                <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-teal-500 to-sky-500">journey</span>
+                <span className="absolute -bottom-2 left-0 right-0 h-4 bg-primary/10 transform -rotate-1 rounded"></span>
+              </span><br />
+              brought to <span className="animate-pulse">life</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-lg">
-              Build beautiful visual stories of your travels with our interactive moodboard timeline builder. Organize, design, and share your adventures like never before.
+            
+            <p className="text-xl text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
+              Don&apos;t just document. <span className="font-semibold">Create, curate, and captivate</span> with immersive visual stories that make memories unforgettable.
             </p>
-            <div className="flex flex-wrap gap-4">
+            
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <Button 
                 variant="primary" 
                 size="lg" 
                 onClick={handleCreateTrip}
                 icon="add"
+                className="shadow-lg shadow-primary/20 hover:-translate-y-1 transition-transform"
               >
-                Create Your Trip
+                Start Creating
               </Button>
               <Button 
                 variant="outline" 
                 size="lg" 
                 onClick={handleViewDemo}
+                className="hover:-translate-y-1 transition-transform"
               >
-                View Demo
+                See Magic in Action
               </Button>
+            </div>
+            
+            {/* Social proof */}
+            <div className="mt-12 flex items-center justify-center lg:justify-start">
+              <div className="flex -space-x-3 mr-4">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="w-8 h-8 rounded-full ring-2 ring-background bg-muted flex items-center justify-center text-xs font-medium">
+                    {i}
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-muted-foreground"><span className="font-semibold text-foreground">1,000+</span> travel stories created this week</p>
             </div>
           </div>
           
-          <div className="relative">
-            <div className="relative h-[400px] sm:h-[500px] w-full">
-              <div className="absolute top-0 right-0 w-[90%] h-[90%] rounded-lg overflow-hidden shadow-2xl">
+          <div className="relative hidden lg:block">
+            {/* 3D-style image composition */}
+            <div className="relative h-[500px] w-full perspective-1000">
+              <div className="absolute top-0 right-0 w-[80%] h-[60%] rounded-xl overflow-hidden shadow-2xl transform rotate-2 transition-transform hover:rotate-1 hover:scale-105 z-20">
                 <Image 
                   src="/images/tokyo-1.jpg" 
                   alt="Travel mood board" 
@@ -64,32 +98,39 @@ export default function Hero() {
                   className="object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 text-sm font-medium text-black">
+                  Day 3: Tokyo, Japan
+                </div>
               </div>
-              <div className="absolute bottom-0 left-0 w-[70%] h-[70%] rounded-lg overflow-hidden shadow-2xl">
+              
+              <div className="absolute bottom-0 left-0 w-[70%] h-[65%] rounded-xl overflow-hidden shadow-2xl transform -rotate-3 transition-transform hover:rotate-0 hover:scale-105 z-10">
                 <Image 
                   src="/images/kyoto-1.jpg" 
                   alt="Trip timeline" 
                   fill
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md rounded-lg px-3 py-2 text-sm font-medium text-black">
+                  Day 5: Kyoto, Japan
+                </div>
               </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-primary/20 rounded-full blur-xl z-0"></div>
+              <div className="absolute -bottom-6 right-12 w-32 h-6 bg-black/10 rounded-full blur-md z-0"></div>
             </div>
             
-            {/* Floating badge */}
-            <div className="absolute -top-4 -right-4 bg-card shadow-lg rounded-full py-2 px-4 text-sm font-medium border border-border">
-              New: AI Photo Organization
+            {/* Floating label */}
+            <div className="absolute -top-6 -right-4 bg-card shadow-lg rounded-full py-2 px-4 text-sm font-medium border border-border animate-bounce z-30">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                New: AI Memory Curator
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      
-      {/* Wave divider to next section */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 60" className="w-full h-auto fill-muted/30">
-          <path d="M0,0L60,5.3C120,11,240,21,360,26.7C480,32,600,32,720,29.3C840,27,960,21,1080,16C1200,11,1320,5,1380,2.7L1440,0L1440,60L0,60Z"></path>
-        </svg>
       </div>
     </section>
   );
