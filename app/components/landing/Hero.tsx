@@ -81,7 +81,7 @@ export default function Hero() {
                 size="lg" 
                 onClick={handleToggleStoryPlayer}
                 className="hover:-translate-y-1 transition-transform"
-                icon="timeline"
+                icon="play"
               >
                 Try Story Player
               </Button>

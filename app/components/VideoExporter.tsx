@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { Trip, MediaItem, Sticker } from '../types';
 import Button from './Button';
+import Icon from './Icon';
 import { 
   roundRect,
   estimateTotalDuration 
@@ -555,35 +556,49 @@ export default function VideoExporter({
         
         {/* UI for export control */}
         <div className="flex flex-col gap-4 w-full md:w-[640px]">
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={startExport}
-            disabled={isExporting}
-            icon="download"
-            className={isExporting ? 'opacity-50' : ''}
-          >
-            {isExporting ? 'Generating Video...' : 'Generate Story Video'}
-          </Button>
-          
-          {isExporting && (
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-muted-foreground">Rendering in progress...</span>
-                <span className="font-medium">{progress}%</span>
+          {!isExporting ? (
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={startExport}
+              icon="play"
+            >
+              Generate Video
+            </Button>
+          ) : (
+            <div className="bg-muted/30 p-6 rounded-lg border border-border animate-pulse">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="animate-spin">
+                  <Icon name="loader" size={24} className="text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Generating Video...</h4>
+                  <p className="text-sm text-muted-foreground">
+                    {progress < 25 ? 'Preparing your trip data...' : 
+                     progress < 50 ? 'Building day sequences...' : 
+                     progress < 75 ? 'Creating video frames...' : 
+                     'Finalizing your video...'}
+                  </p>
+                </div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+              
+              <div className="w-full bg-muted rounded-full h-2 overflow-hidden mb-2">
                 <div 
-                  className="bg-primary h-2.5 rounded-full transition-all duration-300 ease-in-out" 
+                  className="bg-primary h-2 rounded-full transition-all duration-300 ease-in-out" 
                   style={{ width: `${progress}%` }}
-                ></div>
+                />
+              </div>
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Creating video</span>
+                <span className="font-medium">{progress}%</span>
               </div>
             </div>
           )}
           
           {error && (
             <div className="text-red-500 bg-red-100 dark:bg-red-900/30 p-3 rounded-md mt-2">
-              Error: {error}
+              <div className="font-medium mb-1">Error generating video</div>
+              <div className="text-sm">{error}</div>
             </div>
           )}
         </div>

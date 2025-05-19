@@ -299,7 +299,7 @@ export default function TripPage() {
                 icon="play"
                 className="border-primary/30 hover:border-primary hover:bg-primary/5"
               >
-                Story Player
+                Create Video Story
               </Button>
               <ExportButton trip={trip} />
             </div>
